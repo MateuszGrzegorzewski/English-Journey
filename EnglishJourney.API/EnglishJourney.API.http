@@ -1,0 +1,196 @@
+@host = https://localhost
+@port = 7222
+@token = CfDJ8Mc1gB6HmiNFseLzFaTpiMZ_OH9lsXLc2gBDCoogrolS5svahV4v5I42vvYKbfoW8X0oViQpcqa9385L-3RjGrLRoJrDIrvj9LhNHG7y1SzLmUktbvO_odk4LwMqo794WvTGk6slvPRazLGybU243IbgdrsRZy-fFSNl8RDg5X9fv8YwM45LUfayOOWB9Dm6BG92aZD0x683hH64i1Sj5htNpNHM1R0pzgdpW3h_ARn4NoEaC3oPUbUIBugC3K1V7rbFNlJXj-4O5-8vy2fsFhXd3YcMORBQhKJKRbrJkeIugSJlJef80XLu7nKuUGwLqDMPhx2AJw038yV4Vderr_SUAXaBE4cTBpYdtSZtKtHym6ik3Efreoo-xAL37VtZXuX3T1vFVJgR74W-xCKkSHS_M5XWc71YabXWrT6Ay5xR9aOhn7j650JdxwDGRO5Ou01YImfXOcodZD9Usm_Bg4kr-CucN3S8Z-KELjNYMnVNK-_-YLRYFU6Of3k3wB6NMrWPNgZ4Lma6wZMLoiKIvz4x4ozCMEG3xQ1Cp7WKhw1A0Hq8fJIE8gC6xhVZ-4UndV1NqA66bI5juwCLPvuMjaANAkhJ0rFrsYDQxWTwkGNOXuYT1V7BMeWJpjFS8QHZhDzWlQFVgMjf2uDSZSC_oQDb4BSdqMpFkF1gk6uXONdTMygeAtmDQJrxtYIoesq8Dw
+
+@EnglishJourney.API_HostAddress = https://localhost:7222
+
+
+###
+
+# CONNECTIONS functionality
+
+###
+
+GET {{EnglishJourney.API_HostAddress}}/api/connections/1
+Authorization: Bearer {{token}}
+
+###
+
+GET {{EnglishJourney.API_HostAddress}}/api/connections
+Authorization: Bearer {{token}}
+
+###
+
+PATCH {{EnglishJourney.API_HostAddress}}/api/connections/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "topic": "Daily Edited"
+}
+
+###
+
+DELETE {{EnglishJourney.API_HostAddress}}/api/connections/12
+Authorization: Bearer {{token}}
+
+###
+
+DELETE {{EnglishJourney.API_HostAddress}}/api/attributes/connections/12
+Authorization: Bearer {{token}}
+
+###
+
+POST {{EnglishJourney.API_HostAddress}}/api/connections
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "topic": "Daily Created"
+}
+
+###
+
+POST {{EnglishJourney.API_HostAddress}}/api/connections/1/attributes
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "word": "whims",
+  "definition": "kaprysy"
+}
+
+###
+
+# NOTES functionality
+
+###
+
+GET {{EnglishJourney.API_HostAddress}}/api/notes
+
+###
+
+GET {{EnglishJourney.API_HostAddress}}/api/notes/archived
+
+###
+
+PATCH {{EnglishJourney.API_HostAddress}}/api/notes/3/archive
+
+###
+
+PATCH {{EnglishJourney.API_HostAddress}}/api/notes/1/dearchive
+
+###
+
+
+PATCH {{EnglishJourney.API_HostAddress}}/api/notes/2
+Content-Type: application/json
+
+{
+  "title": "Updated title",
+  "description": "Updated note"
+}
+
+###
+
+DELETE {{EnglishJourney.API_HostAddress}}/api/notes/4
+
+###
+
+POST {{EnglishJourney.API_HostAddress}}/api/notes
+Content-Type: application/json
+
+{
+   "title": "Created title",
+   "description": "Description"
+}
+
+###
+
+# FLASHCARDS functionality
+
+###
+
+GET {{EnglishJourney.API_HostAddress}}/api/flashcards/category
+
+###
+
+GET {{EnglishJourney.API_HostAddress}}/api/flashcards/category/2
+
+###
+
+PATCH {{EnglishJourney.API_HostAddress}}/api/flashcards/category/3
+Content-Type: application/json
+
+{
+  "name": "Updated category"
+}
+
+###
+
+DELETE {{EnglishJourney.API_HostAddress}}/api/flashcards/category/8
+
+###
+
+POST {{EnglishJourney.API_HostAddress}}/api/flashcards/category
+Content-Type: application/json
+
+{
+  "name": "Created category"
+}
+
+###
+
+GET {{EnglishJourney.API_HostAddress}}/api/flashcards/box/2
+
+###
+
+DELETE {{EnglishJourney.API_HostAddress}}/api/flashcards/1
+
+###
+
+POST {{EnglishJourney.API_HostAddress}}/api/flashcards/box/1
+Content-Type: application/json
+
+{
+  "phrase": "Created word",
+  "definition": "Created definition"
+}
+
+###
+
+PATCH {{EnglishJourney.API_HostAddress}}/api/flashcards/box/1/test
+Content-Type: application/json
+
+{
+  "16": true,
+  "17": false,
+  "18": true,
+  "19": false
+}
+
+###
+
+# USERS
+
+###
+
+POST {{EnglishJourney.API_HostAddress}}/api/identity/register
+Content-Type: application/json
+
+{
+  "email": "usertest@test.com",
+  "password" : "Password1!"
+}
+
+###
+
+POST {{EnglishJourney.API_HostAddress}}/api/identity/login
+Content-Type: application/json
+
+{
+  "email": "usertest@test.com",
+  "password" : "Password1!"
+}
+
+###
