@@ -1,7 +1,7 @@
 ﻿using EnglishJourney.Application.Mappings;
 using EnglishJourney.Application.Note.Commands.CreateNote;
 using EnglishJourney.Application.Note.Query.GetAllNotes;
-using EnglishJourney.Application.User;
+using EnglishJourney.Application.Users;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;

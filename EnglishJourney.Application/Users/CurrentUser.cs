@@ -1,4 +1,4 @@
-﻿namespace EnglishJourney.Application.User
+﻿namespace EnglishJourney.Application.Users
 {
     public record CurrentUser(string Id, string Email, IEnumerable<string> Roles)
     {

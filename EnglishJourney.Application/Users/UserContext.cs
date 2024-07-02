@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
-namespace EnglishJourney.Application.User
+namespace EnglishJourney.Application.Users
 {
     public interface IUserContext
     {
