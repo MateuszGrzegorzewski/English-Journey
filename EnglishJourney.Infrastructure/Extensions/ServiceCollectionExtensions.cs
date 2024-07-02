@@ -1,4 +1,5 @@
-﻿using EnglishJourney.Domain.Entities;
+﻿using EnglishJourney.Application.Authorization;
+using EnglishJourney.Domain.Entities;
 using EnglishJourney.Domain.Interfaces;
 using EnglishJourney.Infrastructure.Persistence;
 using EnglishJourney.Infrastructure.Repositories;
@@ -20,6 +21,7 @@ namespace EnglishJourney.Infrastructure.Extensions
 
             services.AddIdentityApiEndpoints<User>()
                 .AddRoles<IdentityRole>()
+                .AddClaimsPrincipalFactory<EnglishJourneyUserClaimsPrincipalFactory>()
                 .AddEntityFrameworkStores<EnglishJourneyDbContext>();
 
             services.AddScoped<IEnglishJourneySeeder, EnglishJourneySeeder>();
