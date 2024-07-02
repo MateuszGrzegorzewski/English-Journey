@@ -1,6 +1,6 @@
 @host = https://localhost
 @port = 7222
-@token = CfDJ8Mc1gB6HmiNFseLzFaTpiMZ_OH9lsXLc2gBDCoogrolS5svahV4v5I42vvYKbfoW8X0oViQpcqa9385L-3RjGrLRoJrDIrvj9LhNHG7y1SzLmUktbvO_odk4LwMqo794WvTGk6slvPRazLGybU243IbgdrsRZy-fFSNl8RDg5X9fv8YwM45LUfayOOWB9Dm6BG92aZD0x683hH64i1Sj5htNpNHM1R0pzgdpW3h_ARn4NoEaC3oPUbUIBugC3K1V7rbFNlJXj-4O5-8vy2fsFhXd3YcMORBQhKJKRbrJkeIugSJlJef80XLu7nKuUGwLqDMPhx2AJw038yV4Vderr_SUAXaBE4cTBpYdtSZtKtHym6ik3Efreoo-xAL37VtZXuX3T1vFVJgR74W-xCKkSHS_M5XWc71YabXWrT6Ay5xR9aOhn7j650JdxwDGRO5Ou01YImfXOcodZD9Usm_Bg4kr-CucN3S8Z-KELjNYMnVNK-_-YLRYFU6Of3k3wB6NMrWPNgZ4Lma6wZMLoiKIvz4x4ozCMEG3xQ1Cp7WKhw1A0Hq8fJIE8gC6xhVZ-4UndV1NqA66bI5juwCLPvuMjaANAkhJ0rFrsYDQxWTwkGNOXuYT1V7BMeWJpjFS8QHZhDzWlQFVgMjf2uDSZSC_oQDb4BSdqMpFkF1gk6uXONdTMygeAtmDQJrxtYIoesq8Dw
+@token = CfDJ8Mc1gB6HmiNFseLzFaTpiMZ02X9YNreQIOxuvNUn-3RjGrLRoJrDIrvj9LhNHG7y1SzLmUktbvO_odk4LwMqo794WvTGk6slvPRazLGybU243IbgdrsRZy-fFSNl8RDg5X9fv8YwM45LUfayOOWB9Dm6BG92aZD0x683hH64i1Sj5htNpNHM1R0pzgdpW3h_ARn4NoEaC3oPUbUIBugC3K1V7rbFNlJXj-4O5-8vy2fsFhXd3YcMORBQhKJKRbrJkeIugSJlJef80XLu7nKuUGwLqDMPhx2AJw038yV4Vderr_SUAXaBE4cTBpYdtSZtKtHym6ik3Efreoo-xAL37VtZXuX3T1vFVJgR74W-xCKkSHS_M5XWc71YabXWrT6Ay5xR9aOhn7j650JdxwDGRO5Ou01YImfXOcodZD9Usm_Bg4kr-CucN3S8Z-KELjNYMnVNK-_-YLRYFU6Of3k3wB6NMrWPNgZ4Lma6wZMLoiKIvz4x4ozCMEG3xQ1Cp7WKhw1A0Hq8fJIE8gC6xhVZ-4UndV1NqA66bI5juwCLPvuMjaANAkhJ0rFrsYDQxWTwkGNOXuYT1V7BMeWJpjFS8QHZhDzWlQFVgMjf2uDSZSC_oQDb4BSdqMpFkF1gk6uXONdTMygeAtmDQJrxtYIoesq8Dw
 
 @EnglishJourney.API_HostAddress = https://localhost:7222
 
@@ -179,7 +179,7 @@ POST {{EnglishJourney.API_HostAddress}}/api/identity/register
 Content-Type: application/json
 
 {
-  "email": "test@test.com",
+  "email": "user@test.com",
   "password" : "Password1!"
 }
 
@@ -189,8 +189,31 @@ POST {{EnglishJourney.API_HostAddress}}/api/identity/login
 Content-Type: application/json
 
 {
-  "email": "test@test.com",
+  "email": "admin@test.com",
   "password" : "Password1!"
+}
+
+###
+
+POST {{EnglishJourney.API_HostAddress}}/api/identity/userRole
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "userEmail": "test@test.com",
+  "roleName": "USER"
+}
+
+###
+
+DELETE {{EnglishJourney.API_HostAddress}}/api/identity/userRole
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+
+{
+  "userEmail": "test@test.com",
+  "roleName": "USER"
 }
 
 ###

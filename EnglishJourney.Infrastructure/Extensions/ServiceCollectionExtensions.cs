@@ -2,6 +2,8 @@
 using EnglishJourney.Domain.Interfaces;
 using EnglishJourney.Infrastructure.Persistence;
 using EnglishJourney.Infrastructure.Repositories;
+using EnglishJourney.Infrastructure.Seeders;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,8 +19,10 @@ namespace EnglishJourney.Infrastructure.Extensions
                 .EnableSensitiveDataLogging());
 
             services.AddIdentityApiEndpoints<User>()
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<EnglishJourneyDbContext>();
 
+            services.AddScoped<IEnglishJourneySeeder, EnglishJourneySeeder>();
             services.AddScoped<INoteRepository, NoteRepository>();
             services.AddScoped<IConnectionRepository, ConnectionRepository>();
             services.AddScoped<IFlashcardRepository, FlashcardRepository>();
