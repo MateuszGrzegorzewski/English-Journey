@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EnglishJourney.Application.Users;
 using EnglishJourney.Domain.Entities;
 using EnglishJourney.Domain.Interfaces;
 using MediatR;
@@ -6,14 +7,23 @@ using Microsoft.Extensions.Logging;
 
 namespace EnglishJourney.Application.Connection.Commands.CreateConnectionTopic
 {
-    public class CreateTopicCommandHandler(IConnectionRepository repository, IMapper mapper, ILogger<CreateTopicCommandHandler> logger)
-        : IRequestHandler<CreateTopicCommand, int>
+    public class CreateTopicCommandHandler(IConnectionRepository repository, IMapper mapper,
+        ILogger<CreateTopicCommandHandler> logger,
+        IUserContext userContext) : IRequestHandler<CreateTopicCommand, int>
     {
         public async Task<int> Handle(CreateTopicCommand request, CancellationToken cancellationToken)
         {
-            logger.LogInformation("Creating topic {@ConnectionTopic}", request);
+            var currentUser = userContext.GetCurrentUser();
+            if (currentUser == null)
+            {
+                throw new UnauthorizedAccessException("User is not authenticated");
+            }
+
+            logger.LogInformation("{UserEmail} [{UserId}] is creating topic {@ConnectionTopic}",
+                currentUser.Email, currentUser.Id, request);
 
             var topic = mapper.Map<ConnectionTopic>(request);
+            topic.UserId = currentUser.Id;
 
             var id = await repository.CreateTopic(topic);
             return id;

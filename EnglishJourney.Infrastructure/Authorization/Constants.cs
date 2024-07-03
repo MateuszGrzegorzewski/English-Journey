@@ -1,4 +1,4 @@
-﻿namespace EnglishJourney.Application.Authorization
+﻿namespace EnglishJourney.Infrastructure.Authorization
 {
     public static class AppClaimTypes
     {

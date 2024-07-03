@@ -7,5 +7,8 @@
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public ICollection<FlashcardBox> FlashcardBoxes { get; } = new List<FlashcardBox>();
+
+        public User User { get; set; } = default!;
+        public string UserId { get; set; } = default!;
     }
 }

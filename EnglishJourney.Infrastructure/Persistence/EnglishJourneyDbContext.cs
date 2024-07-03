@@ -38,6 +38,21 @@ namespace EnglishJourney.Infrastructure.Persistence
                 .HasForeignKey(f => f.FlashcardCategoryId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+                 .HasMany(u => u.ConnectionTopics)
+                 .WithOne(c => c.User)
+                 .HasForeignKey(c => c.UserId);
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.FlashcardCategories)
+                .WithOne(f => f.User)
+                .HasForeignKey(f => f.UserId);
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Notes)
+                .WithOne(n => n.User)
+                .HasForeignKey(n => n.UserId);
         }
     }
 }

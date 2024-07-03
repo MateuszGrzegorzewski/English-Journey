@@ -17,6 +17,11 @@ namespace EnglishJourney.API.Middlewares
 
                 logger.LogWarning(notFound.Message);
             }
+            catch (ForbidException)
+            {
+                context.Response.StatusCode = 403;
+                await context.Response.WriteAsync("You are not authorized to perform this action");
+            }
             catch (Exception ex)
             {
                 logger.LogError(ex, ex.Message);

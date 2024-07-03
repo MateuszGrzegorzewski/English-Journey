@@ -8,5 +8,8 @@
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime LastModified { get; set; } = DateTime.UtcNow;
         public bool IsArchivized { get; set; } = false;
+
+        public User User { get; set; } = default!;
+        public string UserId { get; set; } = default!;
     }
 }

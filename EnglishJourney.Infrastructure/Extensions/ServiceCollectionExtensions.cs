@@ -1,6 +1,7 @@
-﻿using EnglishJourney.Application.Authorization;
+﻿using EnglishJourney.Application.Infrastructure.Services;
 using EnglishJourney.Domain.Entities;
 using EnglishJourney.Domain.Interfaces;
+using EnglishJourney.Infrastructure.Authorization;
 using EnglishJourney.Infrastructure.Persistence;
 using EnglishJourney.Infrastructure.Repositories;
 using EnglishJourney.Infrastructure.Seeders;
@@ -28,6 +29,8 @@ namespace EnglishJourney.Infrastructure.Extensions
             services.AddScoped<INoteRepository, NoteRepository>();
             services.AddScoped<IConnectionRepository, ConnectionRepository>();
             services.AddScoped<IFlashcardRepository, FlashcardRepository>();
+
+            services.AddScoped<IEnglishJourneyAuthorizationService, EnglishJourneyAuthorizationService>();
         }
     }
 }

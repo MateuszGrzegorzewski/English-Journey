@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 
-namespace EnglishJourney.Application.Authorization
+namespace EnglishJourney.Infrastructure.Authorization
 {
     public class EnglishJourneyUserClaimsPrincipalFactory(UserManager<User> userManager,
         RoleManager<IdentityRole> roleManager,
