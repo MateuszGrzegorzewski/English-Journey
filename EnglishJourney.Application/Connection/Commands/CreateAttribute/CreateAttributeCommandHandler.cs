@@ -20,10 +20,10 @@ namespace EnglishJourney.Application.Connection.Commands.CreateConnectionAttribu
             var topic = await repository.GetTopicById(request.TopicId);
             if (topic == null) throw new NotFoundException(nameof(ConnectionTopic), request.TopicId.ToString());
 
+            var attribute = mapper.Map<ConnectionAttribute>(request);
+
             if (!authorizationService.AuthorizeConnection(topic, ResourceOperation.Delete))
                 throw new ForbidException();
-
-            var attribute = mapper.Map<ConnectionAttribute>(request);
 
             return await repository.CreateAttribute(attribute);
         }

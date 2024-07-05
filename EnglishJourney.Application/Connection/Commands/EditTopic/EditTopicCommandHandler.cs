@@ -17,6 +17,7 @@ namespace EnglishJourney.Application.Connection.Commands.EditConnectionTopic
 
             var topic = await repository.GetTopicById(request.Id);
             if (topic == null) throw new NotFoundException(nameof(ConnectionTopic), request.Id.ToString());
+
             if (!authorizationService.AuthorizeConnection(topic, ResourceOperation.Update))
                 throw new ForbidException();
 

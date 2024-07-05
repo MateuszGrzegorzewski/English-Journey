@@ -1,6 +1,6 @@
 @host = https://localhost
 @port = 7222
-@token = CfDJ8Mc1gB6HmiNFseLzFaTpiMZ02X9YNreQIOxuvNUn-3RjGrLRoJrDIrvj9LhNHG7y1SzLmUktbvO_odk4LwMqo794WvTGk6slvPRazLGybU243IbgdrsRZy-fFSNl8RDg5X9fv8YwM45LUfayOOWB9Dm6BG92aZD0x683hH64i1Sj5htNpNHM1R0pzgdpW3h_ARn4NoEaC3oPUbUIBugC3K1V7rbFNlJXj-4O5-8vy2fsFhXd3YcMORBQhKJKRbrJkeIugSJlJef80XLu7nKuUGwLqDMPhx2AJw038yV4Vderr_SUAXaBE4cTBpYdtSZtKtHym6ik3Efreoo-xAL37VtZXuX3T1vFVJgR74W-xCKkSHS_M5XWc71YabXWrT6Ay5xR9aOhn7j650JdxwDGRO5Ou01YImfXOcodZD9Usm_Bg4kr-CucN3S8Z-KELjNYMnVNK-_-YLRYFU6Of3k3wB6NMrWPNgZ4Lma6wZMLoiKIvz4x4ozCMEG3xQ1Cp7WKhw1A0Hq8fJIE8gC6xhVZ-4UndV1NqA66bI5juwCLPvuMjaANAkhJ0rFrsYDQxWTwkGNOXuYT1V7BMeWJpjFS8QHZhDzWlQFVgMjf2uDSZSC_oQDb4BSdqMpFkF1gk6uXONdTMygeAtmDQJrxtYIoesq8Dw
+@token = CfDJ8Mc1gB6HmiNFseLzFaTpiMYhksXcZxaLEK68jlOxo5KZV6JLbNDQq4ZMdcBh-dNAZl0yytvDbdV5j388Y_5Qj_WeXrKiPOqVziE7gZWNOUgscpgF3_3ujMcwAREYAT2YTMuv7i7o_TItlJM2G3shs2OIFkZ-R0JFz_BR4FPE-EdQ7S3Nx7R7POt4z-xffYQmEbdu58Y4Azp7NeEe497UH3-k70HKqZHvM3R4sQTXY5DQ-2JogZuoaqJCBmxiz0ifQTwRe9e1CUYvSyncYf9GVJdGfda3KOWGEjcARWZY9UBJs3CaxI2ey72vNktSkzaeux-vVICaaHkJQXc9IY4MxdbZNC8ufMf2LB3HZAuA7eBQ69gxEwPb6okTi89sOeiE-NmyBCUcBHnsFu1udmBFizRNB4T2no41u0I7VMmI2hpICv5PHfNraFsatrn5NPxSXG1-1pdKwbLxRLyccCIX5gcyajlpARIEUQBbbBFzF4G9sg-cQk7w8YZFZMtriqTGn_jirYSUFrHGP_fWKZzTji7b2zUd772nURR4sC-m7jGVXA88AREqQwftMmZgdY0MRFIErwkqCBo391M813opABa2H0O7dbBXByB5pz6nZjQStWpyRA9w0M54zTBtMsCkJqBkhtx0PJkBzxWHPycysDQx0nHxCv_shtyFZvxbWitykED0W-0sdZdNy33_EoRj3GAcfFcA26ZBAdorgFnkI7YRF1hbGRWGG7GVeOFxTL2efe5LbAvDt9jwyU750fufBVY9PJb_6l7HI0xfjp-avxDJWF0gV7QliDXXz5ug-Ca3
 
 @EnglishJourney.API_HostAddress = https://localhost:7222
 
@@ -31,12 +31,12 @@ Content-Type: application/json
 
 ###
 
-DELETE {{EnglishJourney.API_HostAddress}}/api/connections/12
+DELETE {{EnglishJourney.API_HostAddress}}/api/connections/2
 Authorization: Bearer {{token}}
 
 ###
 
-DELETE {{EnglishJourney.API_HostAddress}}/api/attributes/connections/12
+DELETE {{EnglishJourney.API_HostAddress}}/api/connections/attributes/2
 Authorization: Bearer {{token}}
 
 ###
@@ -46,7 +46,7 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "topic": "Daily Created"
+  "topic": "User topic"
 }
 
 ###
@@ -189,7 +189,7 @@ POST {{EnglishJourney.API_HostAddress}}/api/identity/login
 Content-Type: application/json
 
 {
-  "email": "admin@test.com",
+  "email": "user@test.com",
   "password" : "Password1!"
 }
 

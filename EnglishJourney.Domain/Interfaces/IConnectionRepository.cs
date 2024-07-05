@@ -14,9 +14,9 @@ namespace EnglishJourney.Domain.Interfaces
 
         Task DeleteTopic(ConnectionTopic connectionTopic);
 
-        Task<IEnumerable<ConnectionTopic>?> GetAllTopics();
+        Task<IEnumerable<ConnectionTopic>?> GetAllTopics(string userId);
 
-        Task<ConnectionTopic?> GetTopicsByName(string topic);
+        Task<ConnectionTopic?> GetTopicsByName(string topic, string userId);
 
         Task<ConnectionAttribute?> GetAttributeById(int attributeId);
 

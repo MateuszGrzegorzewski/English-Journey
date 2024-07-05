@@ -43,16 +43,16 @@ namespace EnglishJourney.Infrastructure.Repositories
             await dbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<ConnectionTopic>?> GetAllTopics()
-            => await dbContext.ConnectionTopics.Include(c => c.Attributes).OrderByDescending(n => n.LastModified).ToListAsync();
+        public async Task<IEnumerable<ConnectionTopic>?> GetAllTopics(string userId)
+            => await dbContext.ConnectionTopics.Include(c => c.Attributes).Where(c => c.UserId == userId).OrderByDescending(n => n.LastModified).ToListAsync();
 
         public async Task<ConnectionAttribute?> GetAttributeById(int attributeId)
-            => await dbContext.ConnectionAtrributes.FirstOrDefaultAsync(c => c.Id == attributeId);
+            => await dbContext.ConnectionAtrributes.Include(c => c.Topic).FirstOrDefaultAsync(c => c.Id == attributeId);
 
         public async Task<ConnectionTopic?> GetTopicById(int topicId)
             => await dbContext.ConnectionTopics.Include(c => c.Attributes).FirstOrDefaultAsync(c => c.Id == topicId);
 
-        public Task<ConnectionTopic?> GetTopicsByName(string topic)
-            => dbContext.ConnectionTopics.FirstOrDefaultAsync(c => c.Topic.ToLower() == topic.ToLower());
+        public Task<ConnectionTopic?> GetTopicsByName(string topic, string userId)
+            => dbContext.ConnectionTopics.Where(c => c.UserId == userId).FirstOrDefaultAsync(c => c.Topic.ToLower() == topic.ToLower());
     }
 }

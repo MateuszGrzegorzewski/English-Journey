@@ -21,15 +21,15 @@ namespace EnglishJourney.Application.Infrastructure.Services
             logger.LogInformation("User {UserEmail} is trying to {ResourceOperation} topic {ConnectionTopic}",
                                user.Email, resourceOperation, connectionTopic.Topic);
 
-            if (resourceOperation == ResourceOperation.Read || resourceOperation == ResourceOperation.Create)
+            if (resourceOperation == ResourceOperation.Create)
             {
-                logger.LogInformation("Create / read operation is successful authorized");
+                logger.LogInformation("Create operation is successful authorized");
                 return true;
             }
 
-            if ((resourceOperation == ResourceOperation.Delete || resourceOperation == ResourceOperation.Update) && user.Id == connectionTopic.UserId)
+            if ((resourceOperation == ResourceOperation.Delete || resourceOperation == ResourceOperation.Update || resourceOperation == ResourceOperation.Read) && user.Id == connectionTopic.UserId)
             {
-                logger.LogInformation("Delete / update operation is successful authorized");
+                logger.LogInformation("Read / delete / update operation is successful authorized");
                 return true;
             }
 
