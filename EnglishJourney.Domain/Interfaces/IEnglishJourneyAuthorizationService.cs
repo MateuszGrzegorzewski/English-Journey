@@ -6,5 +6,7 @@ namespace EnglishJourney.Domain.Interfaces
     public interface IEnglishJourneyAuthorizationService
     {
         bool AuthorizeConnection(ConnectionTopic connectionTopic, ResourceOperation resourceOperation);
+
+        bool AuthorizeNotes(Note note, ResourceOperation resourceOperation);
     }
 }
