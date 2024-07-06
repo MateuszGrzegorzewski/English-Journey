@@ -1,8 +1,10 @@
 ﻿using FluentValidation.TestHelper;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace EnglishJourney.Application.Note.Commands.CreateNote.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class CreateNoteCommandValidatorTests
     {
         [Fact()]

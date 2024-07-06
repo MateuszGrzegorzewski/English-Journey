@@ -4,10 +4,12 @@ using EnglishJourney.Domain.Interfaces;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace EnglishJourney.Application.Note.Commands.ArchiveNote.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class ArchiveNoteCommandHandlerTests
     {
         private ArchiveNoteCommandHandler CreateArchiveNoteHandler(out Mock<INoteRepository> noteRepositoryMock, out Domain.Entities.Note note)
@@ -64,6 +66,37 @@ namespace EnglishJourney.Application.Note.Commands.ArchiveNote.Tests
 
             // act & assert
             await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task Handle_ArchiveNote_ShouldThrowForbidException_WhenNoAuthorization()
+        {
+            // arrange
+            var note = new Domain.Entities.Note
+            {
+                Id = 1,
+                Title = "Test",
+                IsArchivized = false
+            };
+
+            var noteRepositoryMock = new Mock<INoteRepository>();
+
+            var loggerMock = new Mock<ILogger<ArchiveNoteCommandHandler>>();
+
+            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeNotes(It.IsAny<Domain.Entities.Note>(), It.IsAny<ResourceOperation>())).Returns(false);
+
+            var handler = new ArchiveNoteCommandHandler(noteRepositoryMock.Object, loggerMock.Object, englishJourneyAuthorizationServiceMock.Object);
+
+            var command = new ArchiveNoteCommand
+            {
+                Id = note.Id
+            };
+
+            noteRepositoryMock.Setup(n => n.GetById(note.Id)).ReturnsAsync(note);
+
+            // act && assert
+            await Assert.ThrowsAsync<ForbidException>(() => handler.Handle(command, CancellationToken.None));
         }
     }
 }

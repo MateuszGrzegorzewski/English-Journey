@@ -4,10 +4,12 @@ using EnglishJourney.Domain.Interfaces;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace EnglishJourney.Application.Note.Commands.EditNote.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class EditNoteCommandHandlerTests
     {
         private EditNoteCommandHandler CreateEditNoteHandler(out Mock<INoteRepository> noteRepositoryMock, out Domain.Entities.Note note)
@@ -66,6 +68,38 @@ namespace EnglishJourney.Application.Note.Commands.EditNote.Tests
 
             // act & assert
             await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task Handle_EditNote_ShouldThrownException_WhenNoAuthorized()
+        {
+            // arrange
+            var note = new Domain.Entities.Note
+            {
+                Id = 1,
+                Title = "Test",
+                IsArchivized = false
+            };
+
+            var noteRepositoryMock = new Mock<INoteRepository>();
+
+            var loggerMock = new Mock<ILogger<EditNoteCommandHandler>>();
+
+            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeNotes(It.IsAny<Domain.Entities.Note>(), It.IsAny<ResourceOperation>())).Returns(false);
+
+            var handler = new EditNoteCommandHandler(noteRepositoryMock.Object, loggerMock.Object, englishJourneyAuthorizationServiceMock.Object);
+
+            var command = new EditNoteCommand
+            {
+                Id = note.Id,
+                Title = "Edit title"
+            };
+
+            noteRepositoryMock.Setup(n => n.GetById(note.Id)).ReturnsAsync(note);
+
+            // act & assert
+            await Assert.ThrowsAsync<ForbidException>(() => handler.Handle(command, CancellationToken.None));
         }
     }
 }

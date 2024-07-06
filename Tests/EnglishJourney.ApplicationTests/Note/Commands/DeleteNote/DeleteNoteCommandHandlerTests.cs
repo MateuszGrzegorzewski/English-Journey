@@ -3,10 +3,12 @@ using EnglishJourney.Domain.Exceptions;
 using EnglishJourney.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace EnglishJourney.Application.Note.Commands.DeleteNote.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class DeleteNoteCommandHandlerTests
     {
         private DeleteNoteCommandHandler CreateDeleteNoteHandler(out Mock<INoteRepository> noteRepositoryMock, out Domain.Entities.Note note)
@@ -60,6 +62,36 @@ namespace EnglishJourney.Application.Note.Commands.DeleteNote.Tests
 
             // act & assert
             await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task Handle_DeleteNote_ShouldThrownForbidException_WhenNoAuthorized()
+        {
+            // arrange
+            var note = new Domain.Entities.Note
+            {
+                Id = 1,
+                Title = "Test"
+            };
+
+            var noteRepositoryMock = new Mock<INoteRepository>();
+
+            var loggerMock = new Mock<ILogger<DeleteNoteCommandHandler>>();
+
+            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeNotes(It.IsAny<Domain.Entities.Note>(), It.IsAny<ResourceOperation>())).Returns(false);
+
+            var handler = new DeleteNoteCommandHandler(noteRepositoryMock.Object, loggerMock.Object, englishJourneyAuthorizationServiceMock.Object);
+
+            var command = new DeleteNoteCommand
+            {
+                Id = note.Id
+            };
+
+            noteRepositoryMock.Setup(n => n.GetById(note.Id)).ReturnsAsync(note);
+
+            // act & assert
+            await Assert.ThrowsAsync<ForbidException>(() => handler.Handle(command, CancellationToken.None));
         }
     }
 }
