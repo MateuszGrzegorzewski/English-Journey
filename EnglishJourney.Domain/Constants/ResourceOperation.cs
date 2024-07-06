@@ -4,6 +4,7 @@
     {
         Create,
         Read,
+        ReadAll,
         Update,
         Delete
     }

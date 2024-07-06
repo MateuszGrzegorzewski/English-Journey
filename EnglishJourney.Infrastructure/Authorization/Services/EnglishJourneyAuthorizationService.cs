@@ -18,12 +18,20 @@ namespace EnglishJourney.Application.Infrastructure.Services
                 return false;
             }
 
-            logger.LogInformation("['Connections' functionality] User {UserEmail} is trying to {ResourceOperation} topic / attribute",
-                               user.Email, resourceOperation);
-
-            if (resourceOperation == ResourceOperation.Create)
+            if (resourceOperation != ResourceOperation.ReadAll)
             {
-                logger.LogInformation("Create operation is successful authorized");
+                logger.LogInformation("['Connections' functionality] User {UserEmail} is trying to {ResourceOperation} topic / attribute where topic : {ConnectionTopic}",
+                    user.Email, resourceOperation, connectionTopic.Topic);
+            }
+            else
+            {
+                logger.LogInformation("['Connections' functionality] User {UserEmail} is trying to {ResourceOperation} topics",
+                    user.Email, resourceOperation);
+            }
+
+            if (resourceOperation == ResourceOperation.Create && resourceOperation == ResourceOperation.ReadAll)
+            {
+                logger.LogInformation("Create / read all operation is successful authorized");
                 return true;
             }
 
@@ -45,12 +53,20 @@ namespace EnglishJourney.Application.Infrastructure.Services
                 return false;
             }
 
-            logger.LogInformation("['Notes' functionality] User {UserEmail} is trying to {ResourceOperation} topic / attribute",
-                               user.Email, resourceOperation);
-
-            if (resourceOperation == ResourceOperation.Create)
+            if (resourceOperation != ResourceOperation.ReadAll)
             {
-                logger.LogInformation("Create operation is successful authorized");
+                logger.LogInformation("['Notes' functionality] User {UserEmail} is trying to {ResourceOperation} note : {NoteTitle}",
+                    user.Email, resourceOperation, note.Title);
+            }
+            else
+            {
+                logger.LogInformation("['Notes' functionality] User {UserEmail} is trying to {ResourceOperation} notes",
+                    user.Email, resourceOperation);
+            }
+
+            if (resourceOperation == ResourceOperation.Create && resourceOperation == ResourceOperation.ReadAll)
+            {
+                logger.LogInformation("Create / read all operation is successful authorized");
                 return true;
             }
 

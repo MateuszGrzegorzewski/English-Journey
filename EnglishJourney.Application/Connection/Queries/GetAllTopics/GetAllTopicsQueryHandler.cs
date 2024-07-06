@@ -28,7 +28,7 @@ namespace EnglishJourney.Application.Connection.Queries.GetAllConnectionTopics
             var connectionTopics = await repository.GetAllTopics(currentUser.Id);
             var dtos = mapper.Map<IEnumerable<ConnectionTopicDto>>(connectionTopics);
 
-            if (connectionTopics is not null && !authorizationService.AuthorizeConnection(connectionTopics.ToList()[0], ResourceOperation.Read))
+            if (connectionTopics != null && connectionTopics.ToList().Count > 0 && !authorizationService.AuthorizeConnection(connectionTopics.ToList()[0], ResourceOperation.ReadAll))
                 throw new ForbidException();
 
             return dtos;

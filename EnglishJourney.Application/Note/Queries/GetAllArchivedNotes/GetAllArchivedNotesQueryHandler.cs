@@ -26,7 +26,7 @@ namespace EnglishJourney.Application.Note.Queries.GetAllArchivedNotes
             var notes = await repository.GetAllArchived(currentUser.Id);
             var dtos = mapper.Map<IEnumerable<NoteDto>>(notes);
 
-            if (notes != null && notes.ToList().Count > 0 && !authorizationService.AuthorizeNotes(notes.ToList()[0], ResourceOperation.Read))
+            if (notes != null && notes.ToList().Count > 0 && !authorizationService.AuthorizeNotes(notes.ToList()[0], ResourceOperation.ReadAll))
                 throw new ForbidException();
 
             return dtos;
