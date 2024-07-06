@@ -4,15 +4,17 @@ using EnglishJourney.Domain.Exceptions;
 using EnglishJourney.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace EnglishJourney.Application.Connection.Commands.DeleteTopic.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class DeleteTopicCommandHandlerTests
     {
         private DeleteTopicCommandHandler CreateDeleteTopicHandler(out Mock<IConnectionRepository> connectionRepositoryMock, out Domain.Entities.ConnectionTopic topic)
         {
-            topic = new Domain.Entities.ConnectionTopic
+            topic = new ConnectionTopic
             {
                 Id = 1,
                 Topic = "Test"
@@ -62,6 +64,36 @@ namespace EnglishJourney.Application.Connection.Commands.DeleteTopic.Tests
 
             // act & assert
             await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task Handle_DeleteTopic_ShouldThrowForbidException_WhenNoAuthorized()
+        {
+            // arrange
+            var topic = new ConnectionTopic
+            {
+                Id = 1,
+                Topic = "Test"
+            };
+
+            var connectionRepositoryMock = new Mock<IConnectionRepository>();
+
+            var loggerMock = new Mock<ILogger<DeleteTopicCommandHandler>>();
+
+            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeConnection(It.IsAny<ConnectionTopic>(), It.IsAny<ResourceOperation>())).Returns(false);
+
+            var handler = new DeleteTopicCommandHandler(connectionRepositoryMock.Object, englishJourneyAuthorizationServiceMock.Object, loggerMock.Object);
+
+            var command = new DeleteTopicCommand
+            {
+                Id = topic.Id
+            };
+
+            connectionRepositoryMock.Setup(c => c.GetTopicById(topic.Id)).ReturnsAsync(topic);
+
+            // act & assert
+            await Assert.ThrowsAsync<ForbidException>(() => handler.Handle(command, CancellationToken.None));
         }
     }
 }

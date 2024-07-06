@@ -5,15 +5,17 @@ using EnglishJourney.Domain.Interfaces;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace EnglishJourney.Application.Connection.Commands.EditConnectionTopic.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class EditTopicCommandHandlerTests
     {
-        private EditTopicCommandHandler CreateEditTopicHandler(out Mock<IConnectionRepository> connectionRepositoryMock, out Domain.Entities.ConnectionTopic topic)
+        private EditTopicCommandHandler CreateEditTopicHandler(out Mock<IConnectionRepository> connectionRepositoryMock, out ConnectionTopic topic)
         {
-            topic = new Domain.Entities.ConnectionTopic
+            topic = new ConnectionTopic
             {
                 Id = 1,
                 Topic = "Test"
@@ -66,6 +68,37 @@ namespace EnglishJourney.Application.Connection.Commands.EditConnectionTopic.Tes
 
             // act & assert
             await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task Handle_EditConnectionTopic_ShouldThrowForbidException_WhenNoAuthorized()
+        {
+            // arrange
+            var topic = new ConnectionTopic
+            {
+                Id = 1,
+                Topic = "Test"
+            };
+
+            var connectionRepositoryMock = new Mock<IConnectionRepository>();
+
+            var loggerMock = new Mock<ILogger<EditTopicCommandHandler>>();
+
+            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeConnection(It.IsAny<ConnectionTopic>(), It.IsAny<ResourceOperation>())).Returns(false);
+
+            var handler = new EditTopicCommandHandler(connectionRepositoryMock.Object, loggerMock.Object, englishJourneyAuthorizationServiceMock.Object);
+
+            var command = new EditTopicCommand
+            {
+                Id = topic.Id,
+                Topic = "Edit topic"
+            };
+
+            connectionRepositoryMock.Setup(c => c.GetTopicById(topic.Id)).ReturnsAsync(topic);
+
+            // act & assert
+            await Assert.ThrowsAsync<ForbidException>(() => handler.Handle(command, CancellationToken.None));
         }
     }
 }

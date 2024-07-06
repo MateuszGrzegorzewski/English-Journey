@@ -4,15 +4,17 @@ using EnglishJourney.Domain.Exceptions;
 using EnglishJourney.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace EnglishJourney.Application.Connection.Commands.DeleteAttribute.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class DeleteAttributeCommandHandlerTests
     {
-        private DeleteAttributeCommandHandler CreateDeleteAttributeHandler(out Mock<IConnectionRepository> connectionRepositoryMock, out Domain.Entities.ConnectionAttribute attribute)
+        private DeleteAttributeCommandHandler CreateDeleteAttributeHandler(out Mock<IConnectionRepository> connectionRepositoryMock, out ConnectionAttribute attribute)
         {
-            attribute = new Domain.Entities.ConnectionAttribute
+            attribute = new ConnectionAttribute
             {
                 Id = 1,
                 Word = "Test"
@@ -62,6 +64,35 @@ namespace EnglishJourney.Application.Connection.Commands.DeleteAttribute.Tests
 
             // act & assert
             await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task Handle_DeleteAttribute_ShouldThrowForbidException_WhenNoAuthorized()
+        {
+            // arrange
+            var attribute = new ConnectionAttribute
+            {
+                Id = 1,
+                Word = "Test"
+            };
+
+            var connectionRepositoryMock = new Mock<IConnectionRepository>();
+
+            var loggerMock = new Mock<ILogger<DeleteAttributeCommandHandler>>();
+
+            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeConnection(It.IsAny<ConnectionTopic>(), It.IsAny<ResourceOperation>())).Returns(false);
+
+            var handler = new DeleteAttributeCommandHandler(connectionRepositoryMock.Object, loggerMock.Object, englishJourneyAuthorizationServiceMock.Object);
+            var command = new DeleteAttributeCommand
+            {
+                Id = attribute.Id
+            };
+
+            connectionRepositoryMock.Setup(c => c.GetAttributeById(attribute.Id)).ReturnsAsync(attribute);
+
+            // act & assert
+            await Assert.ThrowsAsync<ForbidException>(() => handler.Handle(command, CancellationToken.None));
         }
     }
 }

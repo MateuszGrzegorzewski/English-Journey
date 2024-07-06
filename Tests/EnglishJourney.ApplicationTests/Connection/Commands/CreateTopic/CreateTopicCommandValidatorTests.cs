@@ -4,10 +4,12 @@ using EnglishJourney.Domain.Entities;
 using EnglishJourney.Domain.Interfaces;
 using FluentValidation.TestHelper;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace EnglishJourney.Application.Connection.Commands.CreateTopic.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class CreateTopicCommandValidatorTests
     {
         [Fact()]
@@ -84,6 +86,17 @@ namespace EnglishJourney.Application.Connection.Commands.CreateTopic.Tests
             //assert
             result.ShouldHaveValidationErrorFor(c => c.Topic)
                   .WithErrorMessage("Too much characters");
+        }
+
+        [Fact()]
+        public void Validate_WithValidCommandAndNullUser_ShouldThrowException()
+        {
+            //arrange
+            var connectionRepository = new Mock<IConnectionRepository>();
+            var userContextMock = new Mock<IUserContext>();
+
+            //act & assert
+            Assert.Throws<UnauthorizedAccessException>(() => new CreateTopicCommandValidator(connectionRepository.Object, userContextMock.Object));
         }
     }
 }

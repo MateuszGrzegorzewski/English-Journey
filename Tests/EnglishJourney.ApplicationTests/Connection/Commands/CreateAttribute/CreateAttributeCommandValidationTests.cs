@@ -1,9 +1,11 @@
 ﻿using EnglishJourney.Application.Connection.Commands.CreateConnectionAttribute;
 using FluentValidation.TestHelper;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace EnglishJourney.Application.Connection.Commands.CreateAttribute.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class CreateAttributeCommandValidationTests
     {
         [Fact()]

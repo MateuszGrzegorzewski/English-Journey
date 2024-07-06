@@ -6,10 +6,12 @@ using EnglishJourney.Domain.Exceptions;
 using EnglishJourney.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace EnglishJourney.Application.Connection.Commands.CreateConnectionAttribute.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class CreateAttributeCommandHandlerTests
     {
         private CreateAttributeCommandHandler CreateCreateAttributeHandler(out Mock<IConnectionRepository> connectionRepositoryMock)
@@ -56,6 +58,30 @@ namespace EnglishJourney.Application.Connection.Commands.CreateConnectionAttribu
 
             // act & assert
             await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task Handle_CreateAttribute_ShouldThrowForbidException_WhenNoAuthorized()
+        {
+            // arrange
+            var connectionRepositoryMock = new Mock<IConnectionRepository>();
+
+            var myProfile = new ConnectionMappingProfile();
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
+            var mapper = new Mapper(configuration);
+
+            var loggerMock = new Mock<ILogger<CreateAttributeCommandHandler>>();
+
+            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeConnection(It.IsAny<ConnectionTopic>(), It.IsAny<ResourceOperation>())).Returns(false);
+
+            var handler = new CreateAttributeCommandHandler(connectionRepositoryMock.Object, mapper, loggerMock.Object, englishJourneyAuthorizationServiceMock.Object);
+            var command = new CreateAttributeCommand();
+
+            connectionRepositoryMock.Setup(c => c.GetTopicById(It.IsAny<int>())).ReturnsAsync(new ConnectionTopic());
+
+            // act & assert
+            await Assert.ThrowsAsync<ForbidException>(() => handler.Handle(command, CancellationToken.None));
         }
     }
 }
