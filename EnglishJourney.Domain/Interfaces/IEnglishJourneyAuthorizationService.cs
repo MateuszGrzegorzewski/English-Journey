@@ -8,5 +8,7 @@ namespace EnglishJourney.Domain.Interfaces
         bool AuthorizeConnection(ConnectionTopic connectionTopic, ResourceOperation resourceOperation);
 
         bool AuthorizeNotes(Note note, ResourceOperation resourceOperation);
+
+        bool AuthorizeFlashcard(FlashcardCategory flashcardCategory, ResourceOperation resourceOperation)
     }
 }
