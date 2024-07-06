@@ -5,15 +5,17 @@ using EnglishJourney.Domain.Interfaces;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace EnglishJourney.Application.Flashcard.Commands.EditCategory.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class EditCategoryCommandHandlerTests
     {
-        private EditCategoryCommandHandler CreateEditCategoryHandler(out Mock<IFlashcardRepository> flashcardRepositoryMock, out Domain.Entities.FlashcardCategory category)
+        private EditCategoryCommandHandler CreateEditCategoryHandler(out Mock<IFlashcardRepository> flashcardRepositoryMock, out FlashcardCategory category, bool service = true)
         {
-            category = new Domain.Entities.FlashcardCategory
+            category = new FlashcardCategory
             {
                 Id = 1,
                 Name = "Test"
@@ -24,7 +26,7 @@ namespace EnglishJourney.Application.Flashcard.Commands.EditCategory.Tests
             var loggerMock = new Mock<ILogger<EditCategoryCommandHandler>>();
 
             var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
-            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeFlashcard(It.IsAny<FlashcardCategory>(), It.IsAny<ResourceOperation>())).Returns(true);
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeFlashcard(It.IsAny<FlashcardCategory>(), It.IsAny<ResourceOperation>())).Returns(service);
 
             return new EditCategoryCommandHandler(flashcardRepositoryMock.Object, loggerMock.Object, englishJourneyAuthorizationServiceMock.Object);
         }
@@ -66,6 +68,23 @@ namespace EnglishJourney.Application.Flashcard.Commands.EditCategory.Tests
 
             // act & assert
             await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task Handle_EditCategory_ShouldThrowForbidException_WhenNoAuthorized()
+        {
+            // arrange
+            var handler = CreateEditCategoryHandler(out var flashcardRepositoryMock, out var category, false);
+            var command = new EditCategoryCommand
+            {
+                Id = category.Id,
+                Name = "Changed Name"
+            };
+
+            flashcardRepositoryMock.Setup(f => f.GetFlashardCategoryById(category.Id)).ReturnsAsync(category);
+
+            // act & assert
+            await Assert.ThrowsAsync<ForbidException>(() => handler.Handle(command, CancellationToken.None));
         }
     }
 }

@@ -2,10 +2,12 @@
 using EnglishJourney.Domain.Interfaces;
 using FluentValidation.TestHelper;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace EnglishJourney.Application.Flashcard.Commands.CreateCategory.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class CreateCategoryCommandValidatorTests
     {
         [Fact()]
@@ -82,6 +84,18 @@ namespace EnglishJourney.Application.Flashcard.Commands.CreateCategory.Tests
             // assert
             result.ShouldHaveValidationErrorFor(f => f.Name)
                   .WithErrorMessage("Existing Category is not unique name for category");
+        }
+
+        [Fact()]
+        public void Validate_WithValidCommandAndNullUser_ShouldThrowException()
+        {
+            // arrange
+            var flashcardRepositoryMock = new Mock<IFlashcardRepository>();
+
+            var userContextMock = new Mock<IUserContext>();
+
+            // act & assert
+            Assert.Throws<UnauthorizedAccessException>(() => new CreateCategoryCommandValidator(flashcardRepositoryMock.Object, userContextMock.Object));
         }
     }
 }

@@ -7,15 +7,17 @@ using EnglishJourney.Domain.Interfaces;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace EnglishJourney.Application.Flashcard.Queries.GetCategoryById.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class GetCategoryByIdQueryHandlerTests
     {
-        private GetCategoryByIdQueryHandler CreateGetCategoryByIdHandler(out Mock<IFlashcardRepository> flashcardRepositoryMock, out Domain.Entities.FlashcardCategory category)
+        private GetCategoryByIdQueryHandler CreateGetCategoryByIdHandler(out Mock<IFlashcardRepository> flashcardRepositoryMock, out FlashcardCategory category, bool service = true)
         {
-            category = new Domain.Entities.FlashcardCategory
+            category = new FlashcardCategory
             {
                 Id = 1,
                 Name = "Test"
@@ -30,7 +32,7 @@ namespace EnglishJourney.Application.Flashcard.Queries.GetCategoryById.Tests
             var loggerMock = new Mock<ILogger<GetCategoryByIdQueryHandler>>();
 
             var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
-            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeFlashcard(It.IsAny<FlashcardCategory>(), It.IsAny<ResourceOperation>())).Returns(true);
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeFlashcard(It.IsAny<FlashcardCategory>(), It.IsAny<ResourceOperation>())).Returns(service);
 
             return new GetCategoryByIdQueryHandler(flashcardRepositoryMock.Object, mapper, englishJourneyAuthorizationServiceMock.Object, loggerMock.Object);
         }
@@ -65,6 +67,19 @@ namespace EnglishJourney.Application.Flashcard.Queries.GetCategoryById.Tests
 
             // act & assert
             await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(query, CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task HandleGetCategoryById_ShoulThrowForbidException_WhenNoAuthorized()
+        {
+            // arrange
+            var handler = CreateGetCategoryByIdHandler(out var flashcardRepositoryMock, out var category, false);
+            var query = new GetCategoryByIdQuery(category.Id);
+
+            flashcardRepositoryMock.Setup(f => f.GetFlashardCategoryById(category.Id)).ReturnsAsync(category);
+
+            // act & assert
+            await Assert.ThrowsAsync<ForbidException>(() => handler.Handle(query, CancellationToken.None));
         }
     }
 }

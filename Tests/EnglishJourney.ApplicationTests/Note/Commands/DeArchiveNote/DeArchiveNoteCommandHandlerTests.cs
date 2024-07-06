@@ -13,7 +13,7 @@ namespace EnglishJourney.Application.Note.Commands.DeArchiveNote.Tests
     [ExcludeFromCodeCoverage]
     public class DeArchiveNoteCommandHandlerTests
     {
-        private DeArchiveNoteCommandHandler CreateDeArchiveNoteHandler(out Mock<INoteRepository> noteRepositoryMock, out Domain.Entities.Note note)
+        private DeArchiveNoteCommandHandler CreateDeArchiveNoteHandler(out Mock<INoteRepository> noteRepositoryMock, out Domain.Entities.Note note, bool service = true)
         {
             note = new Domain.Entities.Note
             {
@@ -27,7 +27,7 @@ namespace EnglishJourney.Application.Note.Commands.DeArchiveNote.Tests
             var loggerMock = new Mock<ILogger<DeArchiveNoteCommandHandler>>();
 
             var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
-            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeNotes(It.IsAny<Domain.Entities.Note>(), It.IsAny<ResourceOperation>())).Returns(true);
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeNotes(It.IsAny<Domain.Entities.Note>(), It.IsAny<ResourceOperation>())).Returns(service);
 
             return new DeArchiveNoteCommandHandler(noteRepositoryMock.Object, loggerMock.Object, englishJourneyAuthorizationServiceMock.Object);
         }
@@ -73,22 +73,7 @@ namespace EnglishJourney.Application.Note.Commands.DeArchiveNote.Tests
         public async Task Handle_DeArchiveNote_ShouldThrowForbidException_WhenNoAuthorization()
         {
             // arrange
-            var note = new Domain.Entities.Note
-            {
-                Id = 1,
-                Title = "Test",
-                IsArchivized = false
-            };
-
-            var noteRepositoryMock = new Mock<INoteRepository>();
-
-            var loggerMock = new Mock<ILogger<DeArchiveNoteCommandHandler>>();
-
-            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
-            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeNotes(It.IsAny<Domain.Entities.Note>(), It.IsAny<ResourceOperation>())).Returns(false);
-
-            var handler = new DeArchiveNoteCommandHandler(noteRepositoryMock.Object, loggerMock.Object, englishJourneyAuthorizationServiceMock.Object);
-
+            var handler = CreateDeArchiveNoteHandler(out var noteRepositoryMock, out var note, false);
             var command = new DeArchiveNoteCommand
             {
                 Id = note.Id

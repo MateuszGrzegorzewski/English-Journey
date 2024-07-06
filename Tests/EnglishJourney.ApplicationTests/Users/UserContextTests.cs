@@ -2,11 +2,13 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 using Xunit;
 
 namespace EnglishJourney.Application.Users.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class UserContextTests
     {
         [Fact()]

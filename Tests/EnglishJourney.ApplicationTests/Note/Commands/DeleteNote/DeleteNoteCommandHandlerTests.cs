@@ -11,7 +11,7 @@ namespace EnglishJourney.Application.Note.Commands.DeleteNote.Tests
     [ExcludeFromCodeCoverage]
     public class DeleteNoteCommandHandlerTests
     {
-        private DeleteNoteCommandHandler CreateDeleteNoteHandler(out Mock<INoteRepository> noteRepositoryMock, out Domain.Entities.Note note)
+        private DeleteNoteCommandHandler CreateDeleteNoteHandler(out Mock<INoteRepository> noteRepositoryMock, out Domain.Entities.Note note, bool service = true)
         {
             note = new Domain.Entities.Note
             {
@@ -24,7 +24,7 @@ namespace EnglishJourney.Application.Note.Commands.DeleteNote.Tests
             var loggerMock = new Mock<ILogger<DeleteNoteCommandHandler>>();
 
             var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
-            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeNotes(It.IsAny<Domain.Entities.Note>(), It.IsAny<ResourceOperation>())).Returns(true);
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeNotes(It.IsAny<Domain.Entities.Note>(), It.IsAny<ResourceOperation>())).Returns(service);
 
             return new DeleteNoteCommandHandler(noteRepositoryMock.Object, loggerMock.Object, englishJourneyAuthorizationServiceMock.Object);
         }
@@ -68,21 +68,7 @@ namespace EnglishJourney.Application.Note.Commands.DeleteNote.Tests
         public async Task Handle_DeleteNote_ShouldThrownForbidException_WhenNoAuthorized()
         {
             // arrange
-            var note = new Domain.Entities.Note
-            {
-                Id = 1,
-                Title = "Test"
-            };
-
-            var noteRepositoryMock = new Mock<INoteRepository>();
-
-            var loggerMock = new Mock<ILogger<DeleteNoteCommandHandler>>();
-
-            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
-            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeNotes(It.IsAny<Domain.Entities.Note>(), It.IsAny<ResourceOperation>())).Returns(false);
-
-            var handler = new DeleteNoteCommandHandler(noteRepositoryMock.Object, loggerMock.Object, englishJourneyAuthorizationServiceMock.Object);
-
+            var handler = CreateDeleteNoteHandler(out var noteRepositoryMock, out var note, false);
             var command = new DeleteNoteCommand
             {
                 Id = note.Id

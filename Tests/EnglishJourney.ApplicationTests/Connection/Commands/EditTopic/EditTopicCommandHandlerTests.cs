@@ -13,7 +13,7 @@ namespace EnglishJourney.Application.Connection.Commands.EditConnectionTopic.Tes
     [ExcludeFromCodeCoverage]
     public class EditTopicCommandHandlerTests
     {
-        private EditTopicCommandHandler CreateEditTopicHandler(out Mock<IConnectionRepository> connectionRepositoryMock, out ConnectionTopic topic)
+        private EditTopicCommandHandler CreateEditTopicHandler(out Mock<IConnectionRepository> connectionRepositoryMock, out ConnectionTopic topic, bool service = true)
         {
             topic = new ConnectionTopic
             {
@@ -26,7 +26,7 @@ namespace EnglishJourney.Application.Connection.Commands.EditConnectionTopic.Tes
             var loggerMock = new Mock<ILogger<EditTopicCommandHandler>>();
 
             var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
-            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeConnection(It.IsAny<ConnectionTopic>(), It.IsAny<ResourceOperation>())).Returns(true);
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeConnection(It.IsAny<ConnectionTopic>(), It.IsAny<ResourceOperation>())).Returns(service);
 
             return new EditTopicCommandHandler(connectionRepositoryMock.Object, loggerMock.Object, englishJourneyAuthorizationServiceMock.Object);
         }
@@ -74,21 +74,7 @@ namespace EnglishJourney.Application.Connection.Commands.EditConnectionTopic.Tes
         public async Task Handle_EditConnectionTopic_ShouldThrowForbidException_WhenNoAuthorized()
         {
             // arrange
-            var topic = new ConnectionTopic
-            {
-                Id = 1,
-                Topic = "Test"
-            };
-
-            var connectionRepositoryMock = new Mock<IConnectionRepository>();
-
-            var loggerMock = new Mock<ILogger<EditTopicCommandHandler>>();
-
-            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
-            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeConnection(It.IsAny<ConnectionTopic>(), It.IsAny<ResourceOperation>())).Returns(false);
-
-            var handler = new EditTopicCommandHandler(connectionRepositoryMock.Object, loggerMock.Object, englishJourneyAuthorizationServiceMock.Object);
-
+            var handler = CreateEditTopicHandler(out var connectionRepositoryMock, out var topic, false);
             var command = new EditTopicCommand
             {
                 Id = topic.Id,

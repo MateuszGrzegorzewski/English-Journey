@@ -13,7 +13,7 @@ namespace EnglishJourney.Application.Note.Queries.GetByIdNote.Tests
     [ExcludeFromCodeCoverage]
     public class GetByIdNoteQueryHandlerTests
     {
-        private GetByIdNoteQueryHandler CreateHandler(out Mock<INoteRepository> noteRepositoryMock, out Domain.Entities.Note note)
+        private GetByIdNoteQueryHandler CreateHandler(out Mock<INoteRepository> noteRepositoryMock, out Domain.Entities.Note note, bool service = true)
         {
             note = new Domain.Entities.Note
             {
@@ -30,7 +30,7 @@ namespace EnglishJourney.Application.Note.Queries.GetByIdNote.Tests
             var loggerMock = new Mock<ILogger<GetByIdNoteQueryHandler>>();
 
             var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
-            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeNotes(It.IsAny<Domain.Entities.Note>(), It.IsAny<ResourceOperation>())).Returns(true);
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeNotes(It.IsAny<Domain.Entities.Note>(), It.IsAny<ResourceOperation>())).Returns(service);
 
             return new GetByIdNoteQueryHandler(noteRepositoryMock.Object, mapper, englishJourneyAuthorizationServiceMock.Object, loggerMock.Object);
         }
@@ -66,25 +66,7 @@ namespace EnglishJourney.Application.Note.Queries.GetByIdNote.Tests
         public async Task GetByIdNoteQueryHandler_ShouldThrownForbidException_WhenNoAuthorized()
         {
             // arrange
-            var note = new Domain.Entities.Note
-            {
-                Id = 1,
-                Title = "Test"
-            };
-
-            var noteRepositoryMock = new Mock<INoteRepository>();
-
-            var myProfile = new NoteMappingProfile();
-            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-            var mapper = new Mapper(configuration);
-
-            var loggerMock = new Mock<ILogger<GetByIdNoteQueryHandler>>();
-
-            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
-            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeNotes(It.IsAny<Domain.Entities.Note>(), It.IsAny<ResourceOperation>())).Returns(false);
-
-            var handler = new GetByIdNoteQueryHandler(noteRepositoryMock.Object, mapper, englishJourneyAuthorizationServiceMock.Object, loggerMock.Object);
-
+            var handler = CreateHandler(out var noteRepositoryMock, out var note, false);
             var query = new GetByIdNoteQuery(note.Id);
             noteRepositoryMock.Setup(n => n.GetById(note.Id)).ReturnsAsync(note);
 

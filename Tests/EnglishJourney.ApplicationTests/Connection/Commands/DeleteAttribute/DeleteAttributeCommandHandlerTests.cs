@@ -12,7 +12,7 @@ namespace EnglishJourney.Application.Connection.Commands.DeleteAttribute.Tests
     [ExcludeFromCodeCoverage]
     public class DeleteAttributeCommandHandlerTests
     {
-        private DeleteAttributeCommandHandler CreateDeleteAttributeHandler(out Mock<IConnectionRepository> connectionRepositoryMock, out ConnectionAttribute attribute)
+        private DeleteAttributeCommandHandler CreateDeleteAttributeHandler(out Mock<IConnectionRepository> connectionRepositoryMock, out ConnectionAttribute attribute, bool service = true)
         {
             attribute = new ConnectionAttribute
             {
@@ -25,7 +25,7 @@ namespace EnglishJourney.Application.Connection.Commands.DeleteAttribute.Tests
             var loggerMock = new Mock<ILogger<DeleteAttributeCommandHandler>>();
 
             var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
-            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeConnection(It.IsAny<ConnectionTopic>(), It.IsAny<ResourceOperation>())).Returns(true);
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeConnection(It.IsAny<ConnectionTopic>(), It.IsAny<ResourceOperation>())).Returns(service);
 
             return new DeleteAttributeCommandHandler(connectionRepositoryMock.Object, loggerMock.Object, englishJourneyAuthorizationServiceMock.Object);
         }
@@ -70,20 +70,7 @@ namespace EnglishJourney.Application.Connection.Commands.DeleteAttribute.Tests
         public async Task Handle_DeleteAttribute_ShouldThrowForbidException_WhenNoAuthorized()
         {
             // arrange
-            var attribute = new ConnectionAttribute
-            {
-                Id = 1,
-                Word = "Test"
-            };
-
-            var connectionRepositoryMock = new Mock<IConnectionRepository>();
-
-            var loggerMock = new Mock<ILogger<DeleteAttributeCommandHandler>>();
-
-            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
-            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeConnection(It.IsAny<ConnectionTopic>(), It.IsAny<ResourceOperation>())).Returns(false);
-
-            var handler = new DeleteAttributeCommandHandler(connectionRepositoryMock.Object, loggerMock.Object, englishJourneyAuthorizationServiceMock.Object);
+            var handler = CreateDeleteAttributeHandler(out var connectionRepositoryMock, out var attribute, false);
             var command = new DeleteAttributeCommand
             {
                 Id = attribute.Id

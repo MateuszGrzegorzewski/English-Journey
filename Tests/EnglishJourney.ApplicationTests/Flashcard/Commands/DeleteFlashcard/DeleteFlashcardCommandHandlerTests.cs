@@ -4,18 +4,29 @@ using EnglishJourney.Domain.Exceptions;
 using EnglishJourney.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace EnglishJourney.Application.Flashcard.Commands.DeleteFlashcard.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class DeleteFlashcardCommandHandlerTests
     {
-        private DeleteFlashcardCommandHandler CreateDeleteFlashcardHandler(out Mock<IFlashcardRepository> flashcardRepositoryMock, out Domain.Entities.Flashcard flashcard)
+        private DeleteFlashcardCommandHandler CreateDeleteFlashcardHandler(out Mock<IFlashcardRepository> flashcardRepositoryMock, out Domain.Entities.Flashcard flashcard, bool service = true)
         {
             flashcard = new Domain.Entities.Flashcard
             {
                 Id = 1,
-                Phrase = "Test"
+                Phrase = "Test",
+                FlashcardBox = new FlashcardBox
+                {
+                    Id = 1,
+                    FlashcardCategory = new FlashcardCategory
+                    {
+                        Id = 1,
+                        Name = "Test"
+                    }
+                }
             };
 
             flashcardRepositoryMock = new Mock<IFlashcardRepository>();
@@ -23,7 +34,7 @@ namespace EnglishJourney.Application.Flashcard.Commands.DeleteFlashcard.Tests
             var loggerMock = new Mock<ILogger<DeleteFlashcardCommandHandler>>();
 
             var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
-            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeFlashcard(It.IsAny<FlashcardCategory>(), It.IsAny<ResourceOperation>())).Returns(true);
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeFlashcard(It.IsAny<FlashcardCategory>(), It.IsAny<ResourceOperation>())).Returns(service);
 
             return new DeleteFlashcardCommandHandler(flashcardRepositoryMock.Object, loggerMock.Object, englishJourneyAuthorizationServiceMock.Object);
         }
@@ -62,6 +73,23 @@ namespace EnglishJourney.Application.Flashcard.Commands.DeleteFlashcard.Tests
 
             // act & assert
             await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task Handle_DeleteFlashcard_ShouldThrowForbidException_WhenNoAuthorized()
+        {
+            // arrange
+            var handler = CreateDeleteFlashcardHandler(out var flashcardRepositoryMock, out var flashcard, false);
+
+            var command = new DeleteFlashcardCommand
+            {
+                Id = flashcard.Id
+            };
+
+            flashcardRepositoryMock.Setup(f => f.GetFlashardById(flashcard.Id)).ReturnsAsync(flashcard);
+
+            // act & assert
+            await Assert.ThrowsAsync<ForbidException>(() => handler.Handle(command, CancellationToken.None));
         }
     }
 }

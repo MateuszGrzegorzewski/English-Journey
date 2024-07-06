@@ -12,7 +12,7 @@ namespace EnglishJourney.Application.Connection.Commands.DeleteTopic.Tests
     [ExcludeFromCodeCoverage]
     public class DeleteTopicCommandHandlerTests
     {
-        private DeleteTopicCommandHandler CreateDeleteTopicHandler(out Mock<IConnectionRepository> connectionRepositoryMock, out Domain.Entities.ConnectionTopic topic)
+        private DeleteTopicCommandHandler CreateDeleteTopicHandler(out Mock<IConnectionRepository> connectionRepositoryMock, out ConnectionTopic topic, bool service = true)
         {
             topic = new ConnectionTopic
             {
@@ -25,7 +25,7 @@ namespace EnglishJourney.Application.Connection.Commands.DeleteTopic.Tests
             var loggerMock = new Mock<ILogger<DeleteTopicCommandHandler>>();
 
             var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
-            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeConnection(It.IsAny<ConnectionTopic>(), It.IsAny<ResourceOperation>())).Returns(true);
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeConnection(It.IsAny<ConnectionTopic>(), It.IsAny<ResourceOperation>())).Returns(service);
 
             return new DeleteTopicCommandHandler(connectionRepositoryMock.Object, englishJourneyAuthorizationServiceMock.Object, loggerMock.Object);
         }
@@ -70,21 +70,7 @@ namespace EnglishJourney.Application.Connection.Commands.DeleteTopic.Tests
         public async Task Handle_DeleteTopic_ShouldThrowForbidException_WhenNoAuthorized()
         {
             // arrange
-            var topic = new ConnectionTopic
-            {
-                Id = 1,
-                Topic = "Test"
-            };
-
-            var connectionRepositoryMock = new Mock<IConnectionRepository>();
-
-            var loggerMock = new Mock<ILogger<DeleteTopicCommandHandler>>();
-
-            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
-            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeConnection(It.IsAny<ConnectionTopic>(), It.IsAny<ResourceOperation>())).Returns(false);
-
-            var handler = new DeleteTopicCommandHandler(connectionRepositoryMock.Object, englishJourneyAuthorizationServiceMock.Object, loggerMock.Object);
-
+            var handler = CreateDeleteTopicHandler(out var connectionRepositoryMock, out var topic, false);
             var command = new DeleteTopicCommand
             {
                 Id = topic.Id

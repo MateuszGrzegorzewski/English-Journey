@@ -4,10 +4,12 @@ using EnglishJourney.Domain.Exceptions;
 using EnglishJourney.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace EnglishJourney.Application.Flashcard.Commands.TestFlashcards.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class TestFlashcardsCommandHandlerTests
     {
         private Mock<IFlashcardRepository> flashcardRepositoryMock;
@@ -34,6 +36,15 @@ namespace EnglishJourney.Application.Flashcard.Commands.TestFlashcards.Tests
                 Phrase = "Test Phrase",
                 Definition = "Test Definition",
                 FlashcardBoxId = 10,
+                FlashcardBox = new FlashcardBox
+                {
+                    Id = 10,
+                    FlashcardCategory = new FlashcardCategory
+                    {
+                        Id = 1,
+                        Name = "Test"
+                    }
+                }
             };
 
             box = new FlashcardBox()
@@ -128,6 +139,31 @@ namespace EnglishJourney.Application.Flashcard.Commands.TestFlashcards.Tests
 
             // act & assert
             await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task Handle_TestFlashcards_ShouldThrowForbidException_WhenNoAuthorized()
+        {
+            // arrange
+            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeFlashcard(It.IsAny<FlashcardCategory>(), It.IsAny<ResourceOperation>())).Returns(false);
+
+            handler = new TestFlashcardsCommandHandler(flashcardRepositoryMock.Object, loggerMock.Object, englishJourneyAuthorizationServiceMock.Object);
+
+            var command = new TestFlashcardsCommand()
+            {
+                TestResults = new Dictionary<int, bool>()
+            {
+                { flashcard.Id, true }
+            }
+            };
+
+            flashcardRepositoryMock.Setup(f => f.GetFlashardById(flashcard.Id)).ReturnsAsync(flashcard);
+            flashcardRepositoryMock.Setup(f => f.GetFlashardBoxById(flashcard.FlashcardBoxId)).ReturnsAsync(box);
+            flashcardRepositoryMock.Setup(f => f.GetFlashcardBoxByCategoryIdAndBoxNumber(box.FlashcardCategoryId, box.BoxNumber + 1)).ReturnsAsync(nextBox);
+
+            // act & assert
+            await Assert.ThrowsAsync<ForbidException>(() => handler.Handle(command, CancellationToken.None));
         }
     }
 }

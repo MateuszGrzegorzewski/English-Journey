@@ -7,15 +7,17 @@ using EnglishJourney.Domain.Interfaces;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace EnglishJourney.Application.Flashcard.Queries.GetBoxById.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class GetBoxByIdQueryHandlerTests
     {
-        private GetBoxByIdQueryHandler CreateGetBoxByIdHandler(out Mock<IFlashcardRepository> flashcardRepositoryMock, out Domain.Entities.FlashcardBox box)
+        private GetBoxByIdQueryHandler CreateGetBoxByIdHandler(out Mock<IFlashcardRepository> flashcardRepositoryMock, out FlashcardBox box, bool service = true)
         {
-            box = new Domain.Entities.FlashcardBox
+            box = new FlashcardBox
             {
                 Id = 1
             };
@@ -29,7 +31,7 @@ namespace EnglishJourney.Application.Flashcard.Queries.GetBoxById.Tests
             var loggerMock = new Mock<ILogger<GetBoxByIdQueryHandler>>();
 
             var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
-            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeFlashcard(It.IsAny<FlashcardCategory>(), It.IsAny<ResourceOperation>())).Returns(true);
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeFlashcard(It.IsAny<FlashcardCategory>(), It.IsAny<ResourceOperation>())).Returns(service);
 
             return new GetBoxByIdQueryHandler(flashcardRepositoryMock.Object, mapper, englishJourneyAuthorizationServiceMock.Object, loggerMock.Object);
         }
@@ -63,6 +65,19 @@ namespace EnglishJourney.Application.Flashcard.Queries.GetBoxById.Tests
 
             // act & assert
             await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(query, CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task HandleGetBoxById_ShouldThrowForbidException_WhenNoAuthorized()
+        {
+            // arrange
+            var handler = CreateGetBoxByIdHandler(out var flashcardRepositoryMock, out var box, false);
+            var query = new GetBoxByIdQuery(box.Id);
+
+            flashcardRepositoryMock.Setup(f => f.GetFlashardBoxById(box.Id)).ReturnsAsync(box);
+
+            // act & assert
+            await Assert.ThrowsAsync<ForbidException>(() => handler.Handle(query, CancellationToken.None));
         }
     }
 }

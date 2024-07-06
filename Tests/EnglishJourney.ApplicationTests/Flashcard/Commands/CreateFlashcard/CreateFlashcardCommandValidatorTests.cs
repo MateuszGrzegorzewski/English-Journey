@@ -1,10 +1,12 @@
 ﻿using EnglishJourney.Domain.Interfaces;
 using FluentValidation.TestHelper;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace EnglishJourney.Application.Flashcard.Commands.CreateFlashcard.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class CreateFlashcardCommandValidatorTests
     {
         [Fact()]

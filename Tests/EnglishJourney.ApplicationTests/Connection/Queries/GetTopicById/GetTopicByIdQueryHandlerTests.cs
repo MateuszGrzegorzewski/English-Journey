@@ -15,7 +15,7 @@ namespace EnglishJourney.Application.Connection.Queries.GetByTopicId.Tests
     [ExcludeFromCodeCoverage]
     public class GetTopicByIdQueryHandlerTests
     {
-        private GetTopicByIdQueryHandler CreateGetTopicByIdHandler(out Mock<IConnectionRepository> connectionRepositoryMock, out ConnectionTopic topic)
+        private GetTopicByIdQueryHandler CreateGetTopicByIdHandler(out Mock<IConnectionRepository> connectionRepositoryMock, out ConnectionTopic topic, bool service = true)
         {
             topic = new ConnectionTopic
             {
@@ -32,7 +32,7 @@ namespace EnglishJourney.Application.Connection.Queries.GetByTopicId.Tests
             var loggerMock = new Mock<ILogger<GetTopicByIdQueryHandler>>();
 
             var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
-            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeConnection(It.IsAny<ConnectionTopic>(), It.IsAny<ResourceOperation>())).Returns(true);
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeConnection(It.IsAny<ConnectionTopic>(), It.IsAny<ResourceOperation>())).Returns(service);
 
             return new GetTopicByIdQueryHandler(connectionRepositoryMock.Object, mapper, englishJourneyAuthorizationServiceMock.Object, loggerMock.Object);
         }
@@ -73,25 +73,7 @@ namespace EnglishJourney.Application.Connection.Queries.GetByTopicId.Tests
         public async Task Handle_GetTopicById_ShouldThrowForbidException_WhenNoAuthorized()
         {
             // arrange
-            var topic = new ConnectionTopic
-            {
-                Id = 1,
-                Topic = "Test"
-            };
-
-            var connectionRepositoryMock = new Mock<IConnectionRepository>();
-
-            var myProfile = new ConnectionMappingProfile();
-            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-            var mapper = new Mapper(configuration);
-
-            var loggerMock = new Mock<ILogger<GetTopicByIdQueryHandler>>();
-
-            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
-            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeConnection(It.IsAny<ConnectionTopic>(), It.IsAny<ResourceOperation>())).Returns(false);
-
-            var handler = new GetTopicByIdQueryHandler(connectionRepositoryMock.Object, mapper, englishJourneyAuthorizationServiceMock.Object, loggerMock.Object);
-
+            var handler = CreateGetTopicByIdHandler(out var connectionRepositoryMock, out var topic, false);
             var query = new GetTopicByIdQuery(topic.Id);
 
             connectionRepositoryMock.Setup(c => c.GetTopicById(topic.Id)).ReturnsAsync(topic);

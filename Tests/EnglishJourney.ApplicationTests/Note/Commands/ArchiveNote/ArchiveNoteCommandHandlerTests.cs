@@ -12,7 +12,7 @@ namespace EnglishJourney.Application.Note.Commands.ArchiveNote.Tests
     [ExcludeFromCodeCoverage]
     public class ArchiveNoteCommandHandlerTests
     {
-        private ArchiveNoteCommandHandler CreateArchiveNoteHandler(out Mock<INoteRepository> noteRepositoryMock, out Domain.Entities.Note note)
+        private ArchiveNoteCommandHandler CreateArchiveNoteHandler(out Mock<INoteRepository> noteRepositoryMock, out Domain.Entities.Note note, bool service = true)
         {
             note = new Domain.Entities.Note
             {
@@ -26,7 +26,7 @@ namespace EnglishJourney.Application.Note.Commands.ArchiveNote.Tests
             var loggerMock = new Mock<ILogger<ArchiveNoteCommandHandler>>();
 
             var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
-            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeNotes(It.IsAny<Domain.Entities.Note>(), It.IsAny<ResourceOperation>())).Returns(true);
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeNotes(It.IsAny<Domain.Entities.Note>(), It.IsAny<ResourceOperation>())).Returns(service);
 
             return new ArchiveNoteCommandHandler(noteRepositoryMock.Object, loggerMock.Object, englishJourneyAuthorizationServiceMock.Object);
         }
@@ -72,22 +72,7 @@ namespace EnglishJourney.Application.Note.Commands.ArchiveNote.Tests
         public async Task Handle_ArchiveNote_ShouldThrowForbidException_WhenNoAuthorization()
         {
             // arrange
-            var note = new Domain.Entities.Note
-            {
-                Id = 1,
-                Title = "Test",
-                IsArchivized = false
-            };
-
-            var noteRepositoryMock = new Mock<INoteRepository>();
-
-            var loggerMock = new Mock<ILogger<ArchiveNoteCommandHandler>>();
-
-            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
-            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeNotes(It.IsAny<Domain.Entities.Note>(), It.IsAny<ResourceOperation>())).Returns(false);
-
-            var handler = new ArchiveNoteCommandHandler(noteRepositoryMock.Object, loggerMock.Object, englishJourneyAuthorizationServiceMock.Object);
-
+            var handler = CreateArchiveNoteHandler(out var noteRepositoryMock, out var note, false);
             var command = new ArchiveNoteCommand
             {
                 Id = note.Id

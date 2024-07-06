@@ -7,10 +7,12 @@ using EnglishJourney.Domain.Exceptions;
 using EnglishJourney.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace EnglishJourney.Application.Connection.Queries.GetAllConnectionTopics.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class GetAllTopicsQueryHandlerTests
     {
         [Fact()]

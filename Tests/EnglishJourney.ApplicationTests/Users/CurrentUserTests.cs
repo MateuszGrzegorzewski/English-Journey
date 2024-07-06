@@ -1,9 +1,11 @@
 ﻿using EnglishJourney.Domain.Constants;
 using FluentAssertions;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace EnglishJourney.Application.Users.Tests;
 
+[ExcludeFromCodeCoverage]
 public class CurrentUserTests
 {
     [Theory()]
