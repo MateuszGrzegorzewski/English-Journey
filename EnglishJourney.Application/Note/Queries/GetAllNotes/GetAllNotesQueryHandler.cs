@@ -17,9 +17,7 @@ namespace EnglishJourney.Application.Note.Query.GetAllNotes
         {
             var currentUser = userContext.GetCurrentUser();
             if (currentUser == null)
-            {
                 throw new UnauthorizedAccessException();
-            }
 
             logger.LogInformation("Getting all notes");
             var notes = await repository.GetAll(currentUser.Id);

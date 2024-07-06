@@ -21,9 +21,7 @@ namespace EnglishJourney.Application.Connection.Queries.GetAllConnectionTopics
 
             var currentUser = userContext.GetCurrentUser();
             if (currentUser == null)
-            {
                 throw new UnauthorizedAccessException("User is not authenticated");
-            }
 
             var connectionTopics = await repository.GetAllTopics(currentUser.Id);
             var dtos = mapper.Map<IEnumerable<ConnectionTopicDto>>(connectionTopics);

@@ -19,9 +19,7 @@ namespace EnglishJourney.Application.Note.Commands.CreateNote
 
             var currentUser = userContext.GetCurrentUser();
             if (currentUser == null)
-            {
                 throw new UnauthorizedAccessException();
-            }
 
             var note = mapper.Map<Domain.Entities.Note>(request);
             note.UserId = currentUser.Id;

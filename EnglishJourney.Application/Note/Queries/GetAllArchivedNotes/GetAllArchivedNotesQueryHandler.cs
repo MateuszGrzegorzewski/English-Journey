@@ -17,9 +17,7 @@ namespace EnglishJourney.Application.Note.Queries.GetAllArchivedNotes
         {
             var currentUser = userContext.GetCurrentUser();
             if (currentUser == null)
-            {
                 throw new UnauthorizedAccessException();
-            }
 
             logger.LogInformation("Getting all archived notes");
 

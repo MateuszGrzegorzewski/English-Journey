@@ -18,9 +18,7 @@ namespace EnglishJourney.Application.Connection.Commands.CreateConnectionTopic
         {
             var currentUser = userContext.GetCurrentUser();
             if (currentUser == null)
-            {
                 throw new UnauthorizedAccessException("User is not authenticated");
-            }
 
             logger.LogInformation("{UserEmail} [{UserId}] is creating topic {@ConnectionTopic}",
                 currentUser.Email, currentUser.Id, request);

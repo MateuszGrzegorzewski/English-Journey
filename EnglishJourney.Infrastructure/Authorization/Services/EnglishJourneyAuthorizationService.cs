@@ -9,7 +9,7 @@ namespace EnglishJourney.Application.Infrastructure.Services
     public class EnglishJourneyAuthorizationService(ILogger<EnglishJourneyAuthorizationService> logger,
         IUserContext userContext) : IEnglishJourneyAuthorizationService
     {
-        public bool AuthorizeConnection(ConnectionTopic connectionTopic, ResourceOperation resourceOperation)
+        private bool Authorize<T>(T resource, string resourceName, Func<T, string> getResourceId, Func<T, string> getResourceTitle, ResourceOperation resourceOperation)
         {
             var user = userContext.GetCurrentUser();
             if (user == null)
@@ -20,98 +20,43 @@ namespace EnglishJourney.Application.Infrastructure.Services
 
             if (resourceOperation != ResourceOperation.ReadAll)
             {
-                logger.LogInformation("['Connections'] User {UserEmail} is trying to {ResourceOperation} topic / attribute where topic : {ConnectionTopic}",
-                    user.Email, resourceOperation, connectionTopic.Topic);
+                logger.LogInformation("['{ResourceName}'] User {UserEmail} is trying to {ResourceOperation} {ResourceTitle}",
+                    resourceName, user.Email, resourceOperation, getResourceTitle(resource));
             }
             else
             {
-                logger.LogInformation("['Connections'] User {UserEmail} is trying to {ResourceOperation} topics",
-                    user.Email, resourceOperation);
+                logger.LogInformation("['{ResourceName}'] User {UserEmail} is trying to {ResourceOperation} {ResourceName}",
+                    resourceName, user.Email, resourceOperation, resourceName);
             }
 
             if (resourceOperation == ResourceOperation.Create || resourceOperation == ResourceOperation.ReadAll)
             {
-                logger.LogInformation("['Connections'] Create / read all operation is successful authorized");
+                logger.LogInformation("['{ResourceName}'] Create / read all operation is successful authorized", resourceName);
                 return true;
             }
 
-            if ((resourceOperation == ResourceOperation.Delete || resourceOperation == ResourceOperation.Update || resourceOperation == ResourceOperation.Read) && user.Id == connectionTopic.UserId)
+            if ((resourceOperation == ResourceOperation.Delete || resourceOperation == ResourceOperation.Update || resourceOperation == ResourceOperation.Read) && user.Id == getResourceId(resource))
             {
-                logger.LogInformation("['Connections'] Read / delete / update operation is successful authorized");
+                logger.LogInformation("['{ResourceName}'] Read / delete / update operation is successful authorized", resourceName);
                 return true;
             }
 
             return false;
+        }
+
+        public bool AuthorizeConnection(ConnectionTopic connectionTopic, ResourceOperation resourceOperation)
+        {
+            return Authorize(connectionTopic, "Connections", ct => ct.UserId, ct => ct.Topic, resourceOperation);
         }
 
         public bool AuthorizeNotes(Domain.Entities.Note note, ResourceOperation resourceOperation)
         {
-            var user = userContext.GetCurrentUser();
-            if (user == null)
-            {
-                logger.LogInformation("User is not authenticated");
-                return false;
-            }
-
-            if (resourceOperation != ResourceOperation.ReadAll)
-            {
-                logger.LogInformation("['Notes'] User {UserEmail} is trying to {ResourceOperation} note : {NoteTitle}",
-                    user.Email, resourceOperation, note.Title);
-            }
-            else
-            {
-                logger.LogInformation("['Notes'] User {UserEmail} is trying to {ResourceOperation} notes",
-                    user.Email, resourceOperation);
-            }
-
-            if (resourceOperation == ResourceOperation.Create || resourceOperation == ResourceOperation.ReadAll)
-            {
-                logger.LogInformation("['Notes'] Create / read all operation is successful authorized");
-                return true;
-            }
-
-            if ((resourceOperation == ResourceOperation.Delete || resourceOperation == ResourceOperation.Update || resourceOperation == ResourceOperation.Read) && user.Id == note.UserId)
-            {
-                logger.LogInformation("['Notes'] Read / delete / update operation is successful authorized");
-                return true;
-            }
-
-            return false;
+            return Authorize(note, "Notes", n => n.UserId, n => n.Title, resourceOperation);
         }
 
         public bool AuthorizeFlashcard(FlashcardCategory flashcardCategory, ResourceOperation resourceOperation)
         {
-            var user = userContext.GetCurrentUser();
-            if (user == null)
-            {
-                logger.LogInformation("User is not authenticated");
-                return false;
-            }
-
-            if (resourceOperation != ResourceOperation.ReadAll)
-            {
-                logger.LogInformation("['Flashcards'] User {UserEmail} is trying to {ResourceOperation} category / flashcard / flashcard box where category : {FlashcardCategory}",
-                    user.Email, resourceOperation, flashcardCategory.Name);
-            }
-            else
-            {
-                logger.LogInformation("['Flashcards'] User {UserEmail} is trying to {ResourceOperation} categories",
-                    user.Email, resourceOperation);
-            }
-
-            if (resourceOperation == ResourceOperation.Create || resourceOperation == ResourceOperation.ReadAll)
-            {
-                logger.LogInformation("['Flashcards'] Create / read all operation is successful authorized");
-                return true;
-            }
-
-            if ((resourceOperation == ResourceOperation.Delete || resourceOperation == ResourceOperation.Update || resourceOperation == ResourceOperation.Read) && user.Id == flashcardCategory.UserId)
-            {
-                logger.LogInformation("['Flashcards'] Read / delete / update operation is successful authorized");
-                return true;
-            }
-
-            return false;
+            return Authorize(flashcardCategory, "Flashcards", fc => fc.UserId, fc => fc.Name, resourceOperation);
         }
     }
 }
