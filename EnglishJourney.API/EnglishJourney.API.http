@@ -1,6 +1,6 @@
 @host = https://localhost
 @port = 7222
-@token = CfDJ8Mc1gB6HmiNFseLzFaTpiMbaunu0oDAk74SIoiY1Cx0V0BkJuyJ7v-Y-l0m8Vq2HwPFoiGnF99E1CJnddBadfeAKxj6J9dRhwHiMfp8DQmj-JEJduZw5uljFLsm75vxxDRH9Mn6byrJKY3lZ8QRzyy8Kv6PCEixKL3wzmCe4tJljMgQSfwichqOuUwdksN3cUvatf_736JExzH5avbT0QxXmSdocSA8yFcT3t96G6XuiltaEs3Mucs-FHPeDrPbJxYNMPWkjk--2Nj1calKhmCkw8u_T7VCb3uDoyG1Mqzf4IXmSDQhAKvt6ly0oPUXt5pw7f8GwhhMszpONmzERTwW8u1bK-1kwiQlU46E7LKEoih06JhJLQaBdjRjKclS7ltY5AXfEXqvTv6sJlJg3Z1O7iohiGvGUrEnGSKvGmUrXePMRDvwCMiaq40gSaxVGW1s5RiRW6BwZVHDW81D1Vp5auTZ4Y-OR93SQAqDAjWjXBFf14kTTXN3e6Yvu2_alwoh29M8IxG6OHhDQbcWPk8bleFYrXpVDV36vhPx3nuRo0hdE8lk-JTQ2lSO9dyl3FzAcTKlGoukl_57ILNgsVrY8ZKXQ39MgyR9b25GBdhYZI81PZtQDFUH9TvD73anWWlpizUm5bvyK1dwyIOAz_z4ZYlyGdv7Z3OVX3EDppMyxfO03PDipx9PyevP_O3kvohZNUDSVlffeVYMrlsD_7sUgGOg84WQ14-IFRGEFW-4zpFHHFE4oWegaRxzaCFylNh52KjFk9CrtNHn4x3q6bQokU39H_Akwe1mpA2v5Jcal
+@token = CfDJ8Mc1gB6HmiNFseLzFaTpiMZ5ilQyunUgfJBmuLzyOgZPE26dWUUt1kNV-olQYLwZtCk4FNz09vQ9Pu8KKTTpMipBrejUS2gmoRFbP4C16n5eVZyOgw-CuE13V8hV03F7Y1Z09Z9jSiks_I6OtxS9eoJzSsyYQTzSt6zu9dKk_2Tk0p0wPg6-nL4do5F6czOeeF-B9zufxVlYTqoBbwwIp8yhZxhq7bbzDTqpjtA7oyyhLF_uDWbdUMeZ6IqP4pP_-aZEsm7xicZKN94xPqbjN-WBvK3WDRvx9arqBzXrTWOy90TtRwmpMk0oS2gWk5MK9FWiSKiSO6UEHzfPtNAXfuk-hD60IZBzO5nk2Orc62OAxuHw2Zb0wBSF177aPpWB8zcEDN56qV-pArIbYSz0M4KZ4EVSvoVLbF_wZfZwgoGPlnXegv4ZqgTCpva-l8pPRewSj7shbzk92N8Q1J1edyqexvWYSrGJaOGn66g3JoJ7KoH0vQSpp3qALoatzzJgleXAPDH_QzMkF_C16w6pi3Kmqy928JCiNEkpOBtZIEeYqV0TF9pTzpdmHZYGc4c0JMo0vFpYWRie2CrNEVpjM4T0gFUn1BUL7mxGOOvTF8x6QZa8h5jaM4_qFWt4nirw9KKKdoXeNxM7o2rLQwCFDZ1vxGrXiNCDIHm6lob9-lY-AxAAlG0IKfnyMLf1Ke3TFbCevBF3m1xPnjB5dRtXhL7JuliKtStk4-1Q1abSoZLnzAH5xLbkN85od7rLTN43hoFJnIa6Uk4ar2MqUiA3MFappE5mhvDyYnwQTSDbVw1H
 
 @EnglishJourney.API_HostAddress = https://localhost:7222
 
@@ -76,7 +76,7 @@ Authorization: Bearer {{token}}
 
 ###
 
-PATCH {{EnglishJourney.API_HostAddress}}/api/notes/3/archive
+PATCH {{EnglishJourney.API_HostAddress}}/api/notes/2/archive
 Authorization: Bearer {{token}}
 
 ###
@@ -98,7 +98,7 @@ Content-Type: application/json
 
 ###
 
-DELETE {{EnglishJourney.API_HostAddress}}/api/notes/4
+DELETE {{EnglishJourney.API_HostAddress}}/api/notes/2
 Authorization: Bearer {{token}}
 
 ###
@@ -119,14 +119,17 @@ Content-Type: application/json
 ###
 
 GET {{EnglishJourney.API_HostAddress}}/api/flashcards/category
+Authorization: Bearer {{token}}
 
 ###
 
 GET {{EnglishJourney.API_HostAddress}}/api/flashcards/category/2
+Authorization: Bearer {{token}}
 
 ###
 
-PATCH {{EnglishJourney.API_HostAddress}}/api/flashcards/category/3
+PATCH {{EnglishJourney.API_HostAddress}}/api/flashcards/category/2
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -135,11 +138,13 @@ Content-Type: application/json
 
 ###
 
-DELETE {{EnglishJourney.API_HostAddress}}/api/flashcards/category/8
+DELETE {{EnglishJourney.API_HostAddress}}/api/flashcards/category/3
+Authorization: Bearer {{token}}
 
 ###
 
 POST {{EnglishJourney.API_HostAddress}}/api/flashcards/category
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -149,14 +154,17 @@ Content-Type: application/json
 ###
 
 GET {{EnglishJourney.API_HostAddress}}/api/flashcards/box/2
+Authorization: Bearer {{token}}
 
 ###
 
 DELETE {{EnglishJourney.API_HostAddress}}/api/flashcards/1
+Authorization: Bearer {{token}}
 
 ###
 
 POST {{EnglishJourney.API_HostAddress}}/api/flashcards/box/1
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -167,13 +175,14 @@ Content-Type: application/json
 ###
 
 PATCH {{EnglishJourney.API_HostAddress}}/api/flashcards/box/1/test
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "16": true,
-  "17": false,
-  "18": true,
-  "19": false
+  "1": true,
+  "2": false,
+  "3": true,
+  "4": false
 }
 
 ###

@@ -29,7 +29,7 @@ namespace EnglishJourney.Application.Infrastructure.Services
                     user.Email, resourceOperation);
             }
 
-            if (resourceOperation == ResourceOperation.Create && resourceOperation == ResourceOperation.ReadAll)
+            if (resourceOperation == ResourceOperation.Create || resourceOperation == ResourceOperation.ReadAll)
             {
                 logger.LogInformation("['Connections'] Create / read all operation is successful authorized");
                 return true;
@@ -64,7 +64,7 @@ namespace EnglishJourney.Application.Infrastructure.Services
                     user.Email, resourceOperation);
             }
 
-            if (resourceOperation == ResourceOperation.Create && resourceOperation == ResourceOperation.ReadAll)
+            if (resourceOperation == ResourceOperation.Create || resourceOperation == ResourceOperation.ReadAll)
             {
                 logger.LogInformation("['Notes'] Create / read all operation is successful authorized");
                 return true;
@@ -99,7 +99,7 @@ namespace EnglishJourney.Application.Infrastructure.Services
                     user.Email, resourceOperation);
             }
 
-            if (resourceOperation == ResourceOperation.Create && resourceOperation == ResourceOperation.ReadAll)
+            if (resourceOperation == ResourceOperation.Create || resourceOperation == ResourceOperation.ReadAll)
             {
                 logger.LogInformation("['Flashcards'] Create / read all operation is successful authorized");
                 return true;

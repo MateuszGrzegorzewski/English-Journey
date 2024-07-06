@@ -16,7 +16,7 @@ namespace EnglishJourney.Domain.Interfaces
 
         Task DeleteFlashcardCategory(FlashcardCategory flashcardCategory);
 
-        Task<IEnumerable<FlashcardCategory>?> GetAllFlashcardCategories();
+        Task<IEnumerable<FlashcardCategory>?> GetAllFlashcardCategories(string userId);
 
         Task<Flashcard?> GetFlashardById(int flashcardId);
 
@@ -26,6 +26,6 @@ namespace EnglishJourney.Domain.Interfaces
 
         Task<FlashcardCategory?> GetFlashardCategoryById(int flashcardCategoryId);
 
-        Task<FlashcardCategory?> GetFlashcardCategoryByName(string flashcardCategoryName);
+        Task<FlashcardCategory?> GetFlashcardCategoryByName(string flashcardCategoryName, string userId);
     }
 }

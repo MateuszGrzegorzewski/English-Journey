@@ -49,23 +49,23 @@ namespace EnglishJourney.Infrastructure.Repositories
             await dbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<FlashcardCategory>?> GetAllFlashcardCategories()
-            => await dbContext.FlashcardsCategories.OrderByDescending(f => f.CreatedAt).ToListAsync();
+        public async Task<IEnumerable<FlashcardCategory>?> GetAllFlashcardCategories(string userId)
+            => await dbContext.FlashcardsCategories.Where(fc => fc.UserId == userId).OrderByDescending(f => f.CreatedAt).ToListAsync();
 
         public async Task<FlashcardBox?> GetFlashardBoxById(int flashcardBoxId)
-            => await dbContext.FlashcardsBoxes.Include(f => f.Flashcards).Where(f => f.Id == flashcardBoxId).FirstOrDefaultAsync();
+            => await dbContext.FlashcardsBoxes.Include(f => f.Flashcards).Include(f => f.FlashcardCategory).Where(f => f.Id == flashcardBoxId).FirstOrDefaultAsync();
 
         public async Task<FlashcardBox?> GetFlashcardBoxByCategoryIdAndBoxNumber(int categoryId, int boxNumber)
             => await dbContext.FlashcardsBoxes.FirstOrDefaultAsync(f => f.FlashcardCategoryId == categoryId && f.BoxNumber == boxNumber);
 
         public async Task<Flashcard?> GetFlashardById(int flashcardId)
-            => await dbContext.Flashcards.Where(f => f.Id == flashcardId).FirstOrDefaultAsync();
+            => await dbContext.Flashcards.Include(f => f.FlashcardBox).ThenInclude(fb => fb.FlashcardCategory).Where(f => f.Id == flashcardId).FirstOrDefaultAsync();
 
         public async Task<FlashcardCategory?> GetFlashardCategoryById(int flashcardCategoryId)
             => await dbContext.FlashcardsCategories.Include(f => f.FlashcardBoxes).ThenInclude(f => f.Flashcards)
                                                    .Where(f => f.Id == flashcardCategoryId).FirstOrDefaultAsync();
 
-        public async Task<FlashcardCategory?> GetFlashcardCategoryByName(string flaschardCategoryName)
-            => await dbContext.FlashcardsCategories.Where(f => f.Name == flaschardCategoryName).FirstOrDefaultAsync();
+        public async Task<FlashcardCategory?> GetFlashcardCategoryByName(string flaschardCategoryName, string userId)
+            => await dbContext.FlashcardsCategories.Where(f => f.Name == flaschardCategoryName).Where(f => f.UserId == userId).FirstOrDefaultAsync();
     }
 }

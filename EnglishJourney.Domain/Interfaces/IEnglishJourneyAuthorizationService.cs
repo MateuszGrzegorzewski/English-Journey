@@ -9,6 +9,6 @@ namespace EnglishJourney.Domain.Interfaces
 
         bool AuthorizeNotes(Note note, ResourceOperation resourceOperation);
 
-        bool AuthorizeFlashcard(FlashcardCategory flashcardCategory, ResourceOperation resourceOperation)
+        bool AuthorizeFlashcard(FlashcardCategory flashcardCategory, ResourceOperation resourceOperation);
     }
 }

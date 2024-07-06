@@ -9,10 +9,12 @@ using EnglishJourney.Application.Flashcard.Queries.GetAllCategories;
 using EnglishJourney.Application.Flashcard.Queries.GetBoxById;
 using EnglishJourney.Application.Flashcard.Queries.GetCategoryById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EnglishJourney.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/flashcards")]
     public class FlashcardController(IMediator mediator) : ControllerBase

@@ -1,4 +1,5 @@
-﻿using EnglishJourney.Domain.Entities;
+﻿using EnglishJourney.Domain.Constants;
+using EnglishJourney.Domain.Entities;
 using EnglishJourney.Domain.Exceptions;
 using EnglishJourney.Domain.Interfaces;
 using MediatR;
@@ -6,7 +7,8 @@ using Microsoft.Extensions.Logging;
 
 namespace EnglishJourney.Application.Flashcard.Commands.TestFlashcards
 {
-    public class TestFlashcardsCommandHandler(IFlashcardRepository repository, ILogger<TestFlashcardsCommandHandler> logger)
+    public class TestFlashcardsCommandHandler(IFlashcardRepository repository, ILogger<TestFlashcardsCommandHandler> logger,
+        IEnglishJourneyAuthorizationService authorizationService)
         : IRequestHandler<TestFlashcardsCommand>
     {
         public async Task Handle(TestFlashcardsCommand request, CancellationToken cancellationToken)
@@ -29,6 +31,9 @@ namespace EnglishJourney.Application.Flashcard.Commands.TestFlashcards
                     logger.LogError("Flashcard with id {FlashcardId} not found", flashcardId);
                     continue;
                 }
+
+                if (!authorizationService.AuthorizeFlashcard(flashcard.FlashcardBox.FlashcardCategory, ResourceOperation.Update))
+                    throw new ForbidException();
 
                 if (knowsWord)
                 {

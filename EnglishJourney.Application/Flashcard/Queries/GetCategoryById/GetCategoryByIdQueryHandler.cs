@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EnglishJourney.Domain.Constants;
 using EnglishJourney.Domain.Exceptions;
 using EnglishJourney.Domain.Interfaces;
 using MediatR;
@@ -6,7 +7,9 @@ using Microsoft.Extensions.Logging;
 
 namespace EnglishJourney.Application.Flashcard.Queries.GetCategoryById
 {
-    public class GetCategoryByIdQueryHandler(IFlashcardRepository repository, IMapper mapper, ILogger<GetCategoryByIdQueryHandler> logger)
+    public class GetCategoryByIdQueryHandler(IFlashcardRepository repository, IMapper mapper,
+        IEnglishJourneyAuthorizationService authorizationService,
+        ILogger<GetCategoryByIdQueryHandler> logger)
         : IRequestHandler<GetCategoryByIdQuery, FlashcardCategoryDto>
     {
         public async Task<FlashcardCategoryDto> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
@@ -17,6 +20,9 @@ namespace EnglishJourney.Application.Flashcard.Queries.GetCategoryById
             if (category == null) throw new NotFoundException(nameof(Domain.Entities.FlashcardCategory), request.Id.ToString());
 
             var dto = mapper.Map<FlashcardCategoryDto>(category);
+
+            if (!authorizationService.AuthorizeFlashcard(category, ResourceOperation.Read))
+                throw new ForbidException();
 
             return dto;
         }
