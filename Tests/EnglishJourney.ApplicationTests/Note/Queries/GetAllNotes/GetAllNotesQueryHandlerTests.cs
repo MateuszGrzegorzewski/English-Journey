@@ -29,7 +29,7 @@ namespace EnglishJourney.Application.Note.Query.GetAllNotes.Tests
             var loggerMock = new Mock<ILogger<GetAllNotesQueryHandler>>();
 
             var userContextMock = new Mock<IUserContext>();
-            var currentUser = new CurrentUser("user-id", "test@test.com", []);
+            var currentUser = new CurrentUser("user-id", "test@test.com", [], null);
             userContextMock.Setup(u => u.GetCurrentUser()).Returns(currentUser);
 
             var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
@@ -86,7 +86,7 @@ namespace EnglishJourney.Application.Note.Query.GetAllNotes.Tests
             var loggerMock = new Mock<ILogger<GetAllNotesQueryHandler>>();
 
             var userContextMock = new Mock<IUserContext>();
-            var currentUser = new CurrentUser("user-id", "test@test.com", []);
+            var currentUser = new CurrentUser("user-id", "test@test.com", [], null);
             userContextMock.Setup(u => u.GetCurrentUser()).Returns(currentUser);
 
             var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();

@@ -27,7 +27,7 @@ namespace EnglishJourney.Application.Connection.Commands.CreateConnectionTopic.T
             var loggerMock = new Mock<ILogger<CreateTopicCommandHandler>>();
 
             var userContextMock = new Mock<IUserContext>();
-            var currentUser = new CurrentUser("user-id", "test@test.com", []);
+            var currentUser = new CurrentUser("user-id", "test@test.com", [], null);
             userContextMock.Setup(u => u.GetCurrentUser()).Returns(currentUser);
 
             var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();

@@ -22,6 +22,7 @@ namespace EnglishJourney.Application.Users.Tests
                 new(ClaimTypes.Email, "test@test.com"),
                 new(ClaimTypes.Role, UserRoles.Admin),
                 new(ClaimTypes.Role, UserRoles.User),
+                new("Nationality", "Polish"),
             };
 
             var user = new ClaimsPrincipal(new ClaimsIdentity(claims, "Test"));
@@ -42,6 +43,7 @@ namespace EnglishJourney.Application.Users.Tests
             currentUser?.Id.Should().Be("1");
             currentUser?.Email.Should().Be("test@test.com");
             currentUser?.Roles.Should().ContainInOrder(UserRoles.Admin, UserRoles.User);
+            currentUser?.Nationality.Should().Be("Polish");
         }
 
         [Fact]

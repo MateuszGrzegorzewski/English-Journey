@@ -15,7 +15,7 @@ namespace EnglishJourney.Application.Flashcard.Commands.EditCategory.Tests
             var flashcardRepositoryMock = new Mock<IFlashcardRepository>();
 
             var userContextMock = new Mock<IUserContext>();
-            var currentUser = new CurrentUser("user-id", "test@test.com", []);
+            var currentUser = new CurrentUser("user-id", "test@test.com", [], null);
             userContextMock.Setup(u => u.GetCurrentUser()).Returns(currentUser);
 
             var validator = new EditCategoryCommandValidator(flashcardRepositoryMock.Object, userContextMock.Object);
@@ -38,7 +38,7 @@ namespace EnglishJourney.Application.Flashcard.Commands.EditCategory.Tests
             var flashcardRepositoryMock = new Mock<IFlashcardRepository>();
 
             var userContextMock = new Mock<IUserContext>();
-            var currentUser = new CurrentUser("user-id", "test@test.com", []);
+            var currentUser = new CurrentUser("user-id", "test@test.com", [], null);
             userContextMock.Setup(u => u.GetCurrentUser()).Returns(currentUser);
 
             var validator = new EditCategoryCommandValidator(flashcardRepositoryMock.Object, userContextMock.Object);
@@ -66,7 +66,7 @@ namespace EnglishJourney.Application.Flashcard.Commands.EditCategory.Tests
                 });
 
             var userContextMock = new Mock<IUserContext>();
-            var currentUser = new CurrentUser("user-id", "test@test.com", []);
+            var currentUser = new CurrentUser("user-id", "test@test.com", [], null);
             userContextMock.Setup(u => u.GetCurrentUser()).Returns(currentUser);
 
             var validator = new EditCategoryCommandValidator(flashcardRepositoryMock.Object, userContextMock.Object);

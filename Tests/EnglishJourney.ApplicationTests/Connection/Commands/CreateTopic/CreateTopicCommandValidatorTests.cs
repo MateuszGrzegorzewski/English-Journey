@@ -17,7 +17,7 @@ namespace EnglishJourney.Application.Connection.Commands.CreateTopic.Tests
             var connectionRepository = new Mock<IConnectionRepository>();
 
             var userContextMock = new Mock<IUserContext>();
-            var currentUser = new CurrentUser("user-id", "test@test.com", []);
+            var currentUser = new CurrentUser("user-id", "test@test.com", [], null);
             userContextMock.Setup(u => u.GetCurrentUser()).Returns(currentUser);
 
             var validator = new CreateTopicCommandValidator(connectionRepository.Object, userContextMock.Object);
@@ -38,7 +38,7 @@ namespace EnglishJourney.Application.Connection.Commands.CreateTopic.Tests
         {
             // arrange
             var userContextMock = new Mock<IUserContext>();
-            var currentUser = new CurrentUser("user-id", "test@test.com", []);
+            var currentUser = new CurrentUser("user-id", "test@test.com", [], null);
             userContextMock.Setup(u => u.GetCurrentUser()).Returns(currentUser);
 
             var connectionRepository = new Mock<IConnectionRepository>();
@@ -69,7 +69,7 @@ namespace EnglishJourney.Application.Connection.Commands.CreateTopic.Tests
             var connectionRepository = new Mock<IConnectionRepository>();
 
             var userContextMock = new Mock<IUserContext>();
-            var currentUser = new CurrentUser("user-id", "test@test.com", []);
+            var currentUser = new CurrentUser("user-id", "test@test.com", [], null);
             userContextMock.Setup(u => u.GetCurrentUser()).Returns(currentUser);
 
             var validator = new CreateTopicCommandValidator(connectionRepository.Object, userContextMock.Object);

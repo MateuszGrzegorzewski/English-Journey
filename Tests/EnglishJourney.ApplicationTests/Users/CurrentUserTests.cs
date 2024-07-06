@@ -12,7 +12,7 @@ public class CurrentUserTests
     public void IsInRole_WithMatchingRole_ShouldReturnTrue(string roleName)
     {
         // arrange
-        var currentUser = new CurrentUser("1", "test@test.com", [UserRoles.Admin, UserRoles.User]);
+        var currentUser = new CurrentUser("1", "test@test.com", [UserRoles.Admin, UserRoles.User], null);
 
         // act
 
@@ -27,7 +27,7 @@ public class CurrentUserTests
     public void IsInRole_WithNoMatchingRole_ShouldReturnFalse()
     {
         // arrange
-        var currentUser = new CurrentUser("1", "test@test.com", [UserRoles.Admin]);
+        var currentUser = new CurrentUser("1", "test@test.com", [UserRoles.Admin], null);
 
         // act
 
@@ -42,7 +42,7 @@ public class CurrentUserTests
     public void IsInRole_WithNoMatchingRoleCase_ShouldReturnFalse()
     {
         // arrange
-        var currentUser = new CurrentUser("1", "test@test.com", [UserRoles.Admin, UserRoles.User]);
+        var currentUser = new CurrentUser("1", "test@test.com", [UserRoles.Admin, UserRoles.User], null);
 
         // act
 
