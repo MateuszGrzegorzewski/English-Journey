@@ -7,10 +7,12 @@ using EnglishJourney.Application.Note.Commands.EditNote;
 using EnglishJourney.Application.Note.Queries.GetAllArchivedNotes;
 using EnglishJourney.Application.Note.Query.GetAllNotes;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EnglishJourney.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/notes")]
     public class NoteController(IMediator mediator) : ControllerBase

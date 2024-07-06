@@ -10,9 +10,9 @@ namespace EnglishJourney.Domain.Interfaces
 
         Task Delete(Note note);
 
-        Task<IEnumerable<Note>?> GetAll();
+        Task<IEnumerable<Note>?> GetAll(string userId);
 
-        Task<IEnumerable<Note>?> GetAllArchived();
+        Task<IEnumerable<Note>?> GetAllArchived(string userId);
 
         Task<Note?> GetById(int id);
     }

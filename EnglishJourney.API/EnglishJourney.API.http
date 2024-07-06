@@ -1,6 +1,6 @@
 @host = https://localhost
 @port = 7222
-@token = CfDJ8Mc1gB6HmiNFseLzFaTpiMYhksXcZxaLEK68jlOxo5KZV6JLbNDQq4ZMdcBh-dNAZl0yytvDbdV5j388Y_5Qj_WeXrKiPOqVziE7gZWNOUgscpgF3_3ujMcwAREYAT2YTMuv7i7o_TItlJM2G3shs2OIFkZ-R0JFz_BR4FPE-EdQ7S3Nx7R7POt4z-xffYQmEbdu58Y4Azp7NeEe497UH3-k70HKqZHvM3R4sQTXY5DQ-2JogZuoaqJCBmxiz0ifQTwRe9e1CUYvSyncYf9GVJdGfda3KOWGEjcARWZY9UBJs3CaxI2ey72vNktSkzaeux-vVICaaHkJQXc9IY4MxdbZNC8ufMf2LB3HZAuA7eBQ69gxEwPb6okTi89sOeiE-NmyBCUcBHnsFu1udmBFizRNB4T2no41u0I7VMmI2hpICv5PHfNraFsatrn5NPxSXG1-1pdKwbLxRLyccCIX5gcyajlpARIEUQBbbBFzF4G9sg-cQk7w8YZFZMtriqTGn_jirYSUFrHGP_fWKZzTji7b2zUd772nURR4sC-m7jGVXA88AREqQwftMmZgdY0MRFIErwkqCBo391M813opABa2H0O7dbBXByB5pz6nZjQStWpyRA9w0M54zTBtMsCkJqBkhtx0PJkBzxWHPycysDQx0nHxCv_shtyFZvxbWitykED0W-0sdZdNy33_EoRj3GAcfFcA26ZBAdorgFnkI7YRF1hbGRWGG7GVeOFxTL2efe5LbAvDt9jwyU750fufBVY9PJb_6l7HI0xfjp-avxDJWF0gV7QliDXXz5ug-Ca3
+@token = CfDJ8Mc1gB6HmiNFseLzFaTpiMbaunu0oDAk74SIoiY1Cx0V0BkJuyJ7v-Y-l0m8Vq2HwPFoiGnF99E1CJnddBadfeAKxj6J9dRhwHiMfp8DQmj-JEJduZw5uljFLsm75vxxDRH9Mn6byrJKY3lZ8QRzyy8Kv6PCEixKL3wzmCe4tJljMgQSfwichqOuUwdksN3cUvatf_736JExzH5avbT0QxXmSdocSA8yFcT3t96G6XuiltaEs3Mucs-FHPeDrPbJxYNMPWkjk--2Nj1calKhmCkw8u_T7VCb3uDoyG1Mqzf4IXmSDQhAKvt6ly0oPUXt5pw7f8GwhhMszpONmzERTwW8u1bK-1kwiQlU46E7LKEoih06JhJLQaBdjRjKclS7ltY5AXfEXqvTv6sJlJg3Z1O7iohiGvGUrEnGSKvGmUrXePMRDvwCMiaq40gSaxVGW1s5RiRW6BwZVHDW81D1Vp5auTZ4Y-OR93SQAqDAjWjXBFf14kTTXN3e6Yvu2_alwoh29M8IxG6OHhDQbcWPk8bleFYrXpVDV36vhPx3nuRo0hdE8lk-JTQ2lSO9dyl3FzAcTKlGoukl_57ILNgsVrY8ZKXQ39MgyR9b25GBdhYZI81PZtQDFUH9TvD73anWWlpizUm5bvyK1dwyIOAz_z4ZYlyGdv7Z3OVX3EDppMyxfO03PDipx9PyevP_O3kvohZNUDSVlffeVYMrlsD_7sUgGOg84WQ14-IFRGEFW-4zpFHHFE4oWegaRxzaCFylNh52KjFk9CrtNHn4x3q6bQokU39H_Akwe1mpA2v5Jcal
 
 @EnglishJourney.API_HostAddress = https://localhost:7222
 
@@ -67,23 +67,28 @@ Content-Type: application/json
 ###
 
 GET {{EnglishJourney.API_HostAddress}}/api/notes
+Authorization: Bearer {{token}}
 
 ###
 
 GET {{EnglishJourney.API_HostAddress}}/api/notes/archived
+Authorization: Bearer {{token}}
 
 ###
 
 PATCH {{EnglishJourney.API_HostAddress}}/api/notes/3/archive
+Authorization: Bearer {{token}}
 
 ###
 
 PATCH {{EnglishJourney.API_HostAddress}}/api/notes/1/dearchive
+Authorization: Bearer {{token}}
 
 ###
 
 
 PATCH {{EnglishJourney.API_HostAddress}}/api/notes/2
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -94,10 +99,12 @@ Content-Type: application/json
 ###
 
 DELETE {{EnglishJourney.API_HostAddress}}/api/notes/4
+Authorization: Bearer {{token}}
 
 ###
 
 POST {{EnglishJourney.API_HostAddress}}/api/notes
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {

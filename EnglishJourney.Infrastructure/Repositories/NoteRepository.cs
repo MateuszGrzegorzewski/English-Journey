@@ -31,11 +31,11 @@ namespace EnglishJourney.Infrastructure.Repositories
             await dbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Note>?> GetAll()
-            => await dbContext.Notes.Where(n => n.IsArchivized == false).OrderByDescending(n => n.LastModified).ToListAsync();
+        public async Task<IEnumerable<Note>?> GetAll(string userId)
+            => await dbContext.Notes.Where(n => n.UserId == userId).Where(n => n.IsArchivized == false).OrderByDescending(n => n.LastModified).ToListAsync();
 
-        public async Task<IEnumerable<Note>?> GetAllArchived()
-            => await dbContext.Notes.Where(n => n.IsArchivized == true).OrderByDescending(n => n.LastModified).ToListAsync();
+        public async Task<IEnumerable<Note>?> GetAllArchived(string userId)
+            => await dbContext.Notes.Where(n => n.UserId == userId).Where(n => n.IsArchivized == true).OrderByDescending(n => n.LastModified).ToListAsync();
 
         public async Task<Note?> GetById(int id)
             => await dbContext.Notes.FirstOrDefaultAsync(x => x.Id == id);
