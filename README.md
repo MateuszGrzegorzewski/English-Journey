@@ -50,7 +50,7 @@ Another very useful technique for learning a foreign language is creating short 
 3. Make sure you have the .NET SDK installed. You can download it from [the official .NET website](https://dotnet.microsoft.com/en-us/download).
 4. `dotnet restore`
 5. Before running the application, you need to create a database. Make sure that the connection to the database is properly configured in the file [appsettings.json](EnglishJourney.API/appsettings.json).
-6. `dotnet ef database update`
+6. In Visual Studio: `Tools` --> `NuGet Package Manager` --> `Package Manager Console` --> Choose default project: EnglishJourney.Infrastructure --> In command line: `Update-Database`
 7. `dotnet build`
 8. `dotnet run`
 
