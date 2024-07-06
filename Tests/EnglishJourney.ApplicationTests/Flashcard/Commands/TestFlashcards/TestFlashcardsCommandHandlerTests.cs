@@ -1,4 +1,5 @@
-﻿using EnglishJourney.Domain.Entities;
+﻿using EnglishJourney.Domain.Constants;
+using EnglishJourney.Domain.Entities;
 using EnglishJourney.Domain.Exceptions;
 using EnglishJourney.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -21,7 +22,11 @@ namespace EnglishJourney.Application.Flashcard.Commands.TestFlashcards.Tests
         {
             flashcardRepositoryMock = new Mock<IFlashcardRepository>();
             loggerMock = new Mock<ILogger<TestFlashcardsCommandHandler>>();
-            handler = new TestFlashcardsCommandHandler(flashcardRepositoryMock.Object, loggerMock.Object);
+
+            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeFlashcard(It.IsAny<FlashcardCategory>(), It.IsAny<ResourceOperation>())).Returns(true);
+
+            handler = new TestFlashcardsCommandHandler(flashcardRepositoryMock.Object, loggerMock.Object, englishJourneyAuthorizationServiceMock.Object);
 
             flashcard = new Domain.Entities.Flashcard()
             {

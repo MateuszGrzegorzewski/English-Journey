@@ -1,4 +1,5 @@
-﻿using EnglishJourney.Domain.Exceptions;
+﻿using EnglishJourney.Domain.Constants;
+using EnglishJourney.Domain.Exceptions;
 using EnglishJourney.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -20,7 +21,10 @@ namespace EnglishJourney.Application.Note.Commands.DeleteNote.Tests
 
             var loggerMock = new Mock<ILogger<DeleteNoteCommandHandler>>();
 
-            return new DeleteNoteCommandHandler(noteRepositoryMock.Object, loggerMock.Object);
+            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeNotes(It.IsAny<Domain.Entities.Note>(), It.IsAny<ResourceOperation>())).Returns(true);
+
+            return new DeleteNoteCommandHandler(noteRepositoryMock.Object, loggerMock.Object, englishJourneyAuthorizationServiceMock.Object);
         }
 
         [Fact]

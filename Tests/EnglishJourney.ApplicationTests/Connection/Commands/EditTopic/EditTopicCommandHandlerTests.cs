@@ -1,4 +1,6 @@
-﻿using EnglishJourney.Domain.Exceptions;
+﻿using EnglishJourney.Domain.Constants;
+using EnglishJourney.Domain.Entities;
+using EnglishJourney.Domain.Exceptions;
 using EnglishJourney.Domain.Interfaces;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -21,7 +23,10 @@ namespace EnglishJourney.Application.Connection.Commands.EditConnectionTopic.Tes
 
             var loggerMock = new Mock<ILogger<EditTopicCommandHandler>>();
 
-            return new EditTopicCommandHandler(connectionRepositoryMock.Object, loggerMock.Object);
+            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeConnection(It.IsAny<ConnectionTopic>(), It.IsAny<ResourceOperation>())).Returns(true);
+
+            return new EditTopicCommandHandler(connectionRepositoryMock.Object, loggerMock.Object, englishJourneyAuthorizationServiceMock.Object);
         }
 
         [Fact]

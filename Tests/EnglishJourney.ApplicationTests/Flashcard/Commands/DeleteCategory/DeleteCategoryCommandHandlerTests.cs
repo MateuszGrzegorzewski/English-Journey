@@ -1,4 +1,6 @@
-﻿using EnglishJourney.Domain.Exceptions;
+﻿using EnglishJourney.Domain.Constants;
+using EnglishJourney.Domain.Entities;
+using EnglishJourney.Domain.Exceptions;
 using EnglishJourney.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -20,7 +22,10 @@ namespace EnglishJourney.Application.Flashcard.Commands.DeleteCategory.Tests
 
             var loggerMock = new Mock<ILogger<DeleteCategoryCommandHandler>>();
 
-            return new DeleteCategoryCommandHandler(flashcardRepositoryMock.Object, loggerMock.Object);
+            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeFlashcard(It.IsAny<FlashcardCategory>(), It.IsAny<ResourceOperation>())).Returns(true);
+
+            return new DeleteCategoryCommandHandler(flashcardRepositoryMock.Object, loggerMock.Object, englishJourneyAuthorizationServiceMock.Object);
         }
 
         [Fact]

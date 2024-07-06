@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using EnglishJourney.Application.Mappings;
+using EnglishJourney.Application.Users;
+using EnglishJourney.Domain.Constants;
 using EnglishJourney.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -23,7 +25,14 @@ namespace EnglishJourney.Application.Note.Commands.CreateNote.Tests
 
             var loggerMock = new Mock<ILogger<CreateNoteCommandHandler>>();
 
-            var handler = new CreateNoteCommandHandler(noteRepositoryMock.Object, mapper, loggerMock.Object);
+            var userContextMock = new Mock<IUserContext>();
+            var currentUser = new CurrentUser("user-id", "test@test.com", []);
+            userContextMock.Setup(u => u.GetCurrentUser()).Returns(currentUser);
+
+            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeNotes(It.IsAny<Domain.Entities.Note>(), It.IsAny<ResourceOperation>())).Returns(true);
+
+            var handler = new CreateNoteCommandHandler(noteRepositoryMock.Object, mapper, userContextMock.Object, englishJourneyAuthorizationServiceMock.Object, loggerMock.Object);
 
             // act
             await handler.Handle(command, CancellationToken.None);

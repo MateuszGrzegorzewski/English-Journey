@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
 using EnglishJourney.Application.Mappings;
+using EnglishJourney.Application.Users;
+using EnglishJourney.Domain.Constants;
+using EnglishJourney.Domain.Entities;
 using EnglishJourney.Domain.Exceptions;
 using EnglishJourney.Domain.Interfaces;
 using FluentAssertions;
@@ -11,9 +14,9 @@ namespace EnglishJourney.Application.Connection.Queries.GetByTopicId.Tests
 {
     public class GetTopicByIdQueryHandlerTests
     {
-        private GetTopicByIdQueryHandler CreateGetTopicByIdHandler(out Mock<IConnectionRepository> connectionRepositoryMock, out Domain.Entities.ConnectionTopic topic)
+        private GetTopicByIdQueryHandler CreateGetTopicByIdHandler(out Mock<IConnectionRepository> connectionRepositoryMock, out ConnectionTopic topic)
         {
-            topic = new Domain.Entities.ConnectionTopic
+            topic = new ConnectionTopic
             {
                 Id = 1,
                 Topic = "Test"
@@ -27,7 +30,10 @@ namespace EnglishJourney.Application.Connection.Queries.GetByTopicId.Tests
 
             var loggerMock = new Mock<ILogger<GetTopicByIdQueryHandler>>();
 
-            return new GetTopicByIdQueryHandler(connectionRepositoryMock.Object, mapper, loggerMock.Object);
+            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeConnection(It.IsAny<ConnectionTopic>(), It.IsAny<ResourceOperation>())).Returns(true);
+
+            return new GetTopicByIdQueryHandler(connectionRepositoryMock.Object, mapper, englishJourneyAuthorizationServiceMock.Object, loggerMock.Object);
         }
 
         [Fact]
@@ -56,7 +62,7 @@ namespace EnglishJourney.Application.Connection.Queries.GetByTopicId.Tests
             var handler = CreateGetTopicByIdHandler(out var connectionRepositoryMock, out var topic);
             var query = new GetTopicByIdQuery(topic.Id);
 
-            connectionRepositoryMock.Setup(c => c.GetTopicById(topic.Id)).ReturnsAsync((Domain.Entities.ConnectionTopic)null);
+            connectionRepositoryMock.Setup(c => c.GetTopicById(topic.Id)).ReturnsAsync((ConnectionTopic)null);
 
             // act & assert
             await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(query, CancellationToken.None));

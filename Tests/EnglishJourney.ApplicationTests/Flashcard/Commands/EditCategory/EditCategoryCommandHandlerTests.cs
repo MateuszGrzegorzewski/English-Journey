@@ -1,4 +1,6 @@
-﻿using EnglishJourney.Domain.Exceptions;
+﻿using EnglishJourney.Domain.Constants;
+using EnglishJourney.Domain.Entities;
+using EnglishJourney.Domain.Exceptions;
 using EnglishJourney.Domain.Interfaces;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -21,7 +23,10 @@ namespace EnglishJourney.Application.Flashcard.Commands.EditCategory.Tests
 
             var loggerMock = new Mock<ILogger<EditCategoryCommandHandler>>();
 
-            return new EditCategoryCommandHandler(flashcardRepositoryMock.Object, loggerMock.Object);
+            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeFlashcard(It.IsAny<FlashcardCategory>(), It.IsAny<ResourceOperation>())).Returns(true);
+
+            return new EditCategoryCommandHandler(flashcardRepositoryMock.Object, loggerMock.Object, englishJourneyAuthorizationServiceMock.Object);
         }
 
         [Fact]

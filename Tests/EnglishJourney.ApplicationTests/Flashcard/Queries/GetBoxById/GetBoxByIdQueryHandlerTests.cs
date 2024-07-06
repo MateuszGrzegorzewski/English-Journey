@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using EnglishJourney.Application.Mappings;
+using EnglishJourney.Domain.Constants;
+using EnglishJourney.Domain.Entities;
 using EnglishJourney.Domain.Exceptions;
 using EnglishJourney.Domain.Interfaces;
 using FluentAssertions;
@@ -26,7 +28,10 @@ namespace EnglishJourney.Application.Flashcard.Queries.GetBoxById.Tests
 
             var loggerMock = new Mock<ILogger<GetBoxByIdQueryHandler>>();
 
-            return new GetBoxByIdQueryHandler(flashcardRepositoryMock.Object, mapper, loggerMock.Object);
+            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeFlashcard(It.IsAny<FlashcardCategory>(), It.IsAny<ResourceOperation>())).Returns(true);
+
+            return new GetBoxByIdQueryHandler(flashcardRepositoryMock.Object, mapper, englishJourneyAuthorizationServiceMock.Object, loggerMock.Object);
         }
 
         [Fact]

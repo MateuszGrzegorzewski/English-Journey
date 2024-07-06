@@ -1,4 +1,5 @@
 ﻿using EnglishJourney.Application.Connection.Commands.CreateConnectionTopic;
+using EnglishJourney.Application.Users;
 using EnglishJourney.Domain.Entities;
 using EnglishJourney.Domain.Interfaces;
 using FluentValidation.TestHelper;
@@ -15,7 +16,11 @@ namespace EnglishJourney.Application.Connection.Commands.CreateTopic.Tests
             //arrange
             var connectionRepository = new Mock<IConnectionRepository>();
 
-            var validator = new CreateTopicCommandValidator(connectionRepository.Object);
+            var userContextMock = new Mock<IUserContext>();
+            var currentUser = new CurrentUser("user-id", "test@test.com", []);
+            userContextMock.Setup(u => u.GetCurrentUser()).Returns(currentUser);
+
+            var validator = new CreateTopicCommandValidator(connectionRepository.Object, userContextMock.Object);
             var command = new CreateTopicCommand()
             {
                 Topic = "Test Topic",
@@ -31,15 +36,19 @@ namespace EnglishJourney.Application.Connection.Commands.CreateTopic.Tests
         [Fact()]
         public void Validate_WithInValidCommandAndExistingTopic_ShouldHaveValidationError()
         {
-            // Arrange
+            // arrange
+            var userContextMock = new Mock<IUserContext>();
+            var currentUser = new CurrentUser("user-id", "test@test.com", []);
+            userContextMock.Setup(u => u.GetCurrentUser()).Returns(currentUser);
+
             var connectionRepository = new Mock<IConnectionRepository>();
-            connectionRepository.Setup(repo => repo.GetTopicsByName(It.IsAny<string>()))
+            connectionRepository.Setup(repo => repo.GetTopicsByName(It.IsAny<string>(), It.IsAny<string>()))
                                 .ReturnsAsync(new ConnectionTopic()
                                 {
                                     Topic = "Test Topic"
                                 });
 
-            var validator = new CreateTopicCommandValidator(connectionRepository.Object);
+            var validator = new CreateTopicCommandValidator(connectionRepository.Object, userContextMock.Object);
             var command = new CreateTopicCommand()
             {
                 Topic = "Test Topic",
@@ -59,7 +68,11 @@ namespace EnglishJourney.Application.Connection.Commands.CreateTopic.Tests
             //arrange
             var connectionRepository = new Mock<IConnectionRepository>();
 
-            var validator = new CreateTopicCommandValidator(connectionRepository.Object);
+            var userContextMock = new Mock<IUserContext>();
+            var currentUser = new CurrentUser("user-id", "test@test.com", []);
+            userContextMock.Setup(u => u.GetCurrentUser()).Returns(currentUser);
+
+            var validator = new CreateTopicCommandValidator(connectionRepository.Object, userContextMock.Object);
             var command = new CreateTopicCommand()
             {
                 Topic = "Test topic which have too much characters",

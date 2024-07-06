@@ -1,4 +1,5 @@
-﻿using EnglishJourney.Domain.Interfaces;
+﻿using EnglishJourney.Application.Users;
+using EnglishJourney.Domain.Interfaces;
 using FluentValidation.TestHelper;
 using Moq;
 using Xunit;
@@ -13,7 +14,11 @@ namespace EnglishJourney.Application.Flashcard.Commands.CreateCategory.Tests
             // arrange
             var flashcardRepositoryMock = new Mock<IFlashcardRepository>();
 
-            var validator = new CreateCategoryCommandValidator(flashcardRepositoryMock.Object);
+            var userContextMock = new Mock<IUserContext>();
+            var currentUser = new CurrentUser("user-id", "test@test.com", []);
+            userContextMock.Setup(u => u.GetCurrentUser()).Returns(currentUser);
+
+            var validator = new CreateCategoryCommandValidator(flashcardRepositoryMock.Object, userContextMock.Object);
             var command = new CreateCategoryCommand()
             {
                 Name = "name",
@@ -32,7 +37,11 @@ namespace EnglishJourney.Application.Flashcard.Commands.CreateCategory.Tests
             // arrange
             var flashcardRepositoryMock = new Mock<IFlashcardRepository>();
 
-            var validator = new CreateCategoryCommandValidator(flashcardRepositoryMock.Object);
+            var userContextMock = new Mock<IUserContext>();
+            var currentUser = new CurrentUser("user-id", "test@test.com", []);
+            userContextMock.Setup(u => u.GetCurrentUser()).Returns(currentUser);
+
+            var validator = new CreateCategoryCommandValidator(flashcardRepositoryMock.Object, userContextMock.Object);
             var command = new CreateCategoryCommand()
             {
                 Name = "Test category which have too much characters",
@@ -51,13 +60,17 @@ namespace EnglishJourney.Application.Flashcard.Commands.CreateCategory.Tests
         {
             // arrange
             var flashcardRepositoryMock = new Mock<IFlashcardRepository>();
-            flashcardRepositoryMock.Setup(repo => repo.GetFlashcardCategoryByName(It.IsAny<string>())).
+            flashcardRepositoryMock.Setup(repo => repo.GetFlashcardCategoryByName(It.IsAny<string>(), It.IsAny<string>())).
                 ReturnsAsync(new Domain.Entities.FlashcardCategory()
                 {
                     Name = "Existing Category",
                 });
 
-            var validator = new CreateCategoryCommandValidator(flashcardRepositoryMock.Object);
+            var userContextMock = new Mock<IUserContext>();
+            var currentUser = new CurrentUser("user-id", "test@test.com", []);
+            userContextMock.Setup(u => u.GetCurrentUser()).Returns(currentUser);
+
+            var validator = new CreateCategoryCommandValidator(flashcardRepositoryMock.Object, userContextMock.Object);
             var command = new CreateCategoryCommand()
             {
                 Name = "Existing Category",

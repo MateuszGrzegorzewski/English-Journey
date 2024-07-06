@@ -1,4 +1,5 @@
-﻿using EnglishJourney.Domain.Exceptions;
+﻿using EnglishJourney.Domain.Constants;
+using EnglishJourney.Domain.Exceptions;
 using EnglishJourney.Domain.Interfaces;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -22,7 +23,10 @@ namespace EnglishJourney.Application.Note.Commands.ArchiveNote.Tests
 
             var loggerMock = new Mock<ILogger<ArchiveNoteCommandHandler>>();
 
-            return new ArchiveNoteCommandHandler(noteRepositoryMock.Object, loggerMock.Object);
+            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeNotes(It.IsAny<Domain.Entities.Note>(), It.IsAny<ResourceOperation>())).Returns(true);
+
+            return new ArchiveNoteCommandHandler(noteRepositoryMock.Object, loggerMock.Object, englishJourneyAuthorizationServiceMock.Object);
         }
 
         [Fact]

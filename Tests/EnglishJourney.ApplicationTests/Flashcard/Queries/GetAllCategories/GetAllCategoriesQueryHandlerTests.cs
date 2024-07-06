@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
 using EnglishJourney.Application.Mappings;
+using EnglishJourney.Application.Users;
+using EnglishJourney.Domain.Constants;
+using EnglishJourney.Domain.Entities;
 using EnglishJourney.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -23,13 +26,20 @@ namespace EnglishJourney.Application.Flashcard.Queries.GetAllCategories.Tests
 
             var loggerMock = new Mock<ILogger<GetAllCategoriesQueryHandler>>();
 
-            var handler = new GetAllCategoriesQueryHandler(flashcardRepositoryMock.Object, mapper, loggerMock.Object);
+            var userContextMock = new Mock<IUserContext>();
+            var currentUser = new CurrentUser("user-id", "test@test.com", []);
+            userContextMock.Setup(u => u.GetCurrentUser()).Returns(currentUser);
+
+            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeFlashcard(It.IsAny<FlashcardCategory>(), It.IsAny<ResourceOperation>())).Returns(true);
+
+            var handler = new GetAllCategoriesQueryHandler(flashcardRepositoryMock.Object, mapper, englishJourneyAuthorizationServiceMock.Object, userContextMock.Object, loggerMock.Object);
 
             // act
             await handler.Handle(query, CancellationToken.None);
 
             // assert
-            flashcardRepositoryMock.Verify(f => f.GetAllFlashcardCategories(), Times.Once);
+            flashcardRepositoryMock.Verify(f => f.GetAllFlashcardCategories(currentUser.Id), Times.Once);
         }
     }
 }

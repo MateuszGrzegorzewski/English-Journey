@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EnglishJourney.Application.Mappings;
+using EnglishJourney.Domain.Constants;
 using EnglishJourney.Domain.Exceptions;
 using EnglishJourney.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -26,7 +27,10 @@ namespace EnglishJourney.Application.Note.Queries.GetByIdNote.Tests
 
             var loggerMock = new Mock<ILogger<GetByIdNoteQueryHandler>>();
 
-            return new GetByIdNoteQueryHandler(noteRepositoryMock.Object, mapper, loggerMock.Object);
+            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeNotes(It.IsAny<Domain.Entities.Note>(), It.IsAny<ResourceOperation>())).Returns(true);
+
+            return new GetByIdNoteQueryHandler(noteRepositoryMock.Object, mapper, englishJourneyAuthorizationServiceMock.Object, loggerMock.Object);
         }
 
         [Fact]

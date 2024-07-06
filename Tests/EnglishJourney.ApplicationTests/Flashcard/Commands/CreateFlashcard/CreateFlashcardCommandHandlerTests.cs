@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using EnglishJourney.Application.Mappings;
+using EnglishJourney.Domain.Constants;
+using EnglishJourney.Domain.Entities;
 using EnglishJourney.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -23,7 +25,10 @@ namespace EnglishJourney.Application.Flashcard.Commands.CreateFlashcard.Tests
 
             var loggerMock = new Mock<ILogger<CreateFlashcardCommandHandler>>();
 
-            var handler = new CreateFlashcardCommandHandler(flashcardRepositoryMock.Object, mapper, loggerMock.Object);
+            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeFlashcard(It.IsAny<FlashcardCategory>(), It.IsAny<ResourceOperation>())).Returns(true);
+
+            var handler = new CreateFlashcardCommandHandler(flashcardRepositoryMock.Object, mapper, englishJourneyAuthorizationServiceMock.Object, loggerMock.Object);
 
             // act
             await handler.Handle(command, CancellationToken.None);

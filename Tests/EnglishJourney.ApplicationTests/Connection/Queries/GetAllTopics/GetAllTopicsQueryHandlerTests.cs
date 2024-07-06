@@ -1,15 +1,12 @@
-﻿using Xunit;
-using EnglishJourney.Application.Connection.Queries.GetAllConnectionTopics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using EnglishJourney.Application.Mappings;
+using EnglishJourney.Application.Users;
+using EnglishJourney.Domain.Constants;
+using EnglishJourney.Domain.Entities;
 using EnglishJourney.Domain.Interfaces;
-using Moq;
 using Microsoft.Extensions.Logging;
+using Moq;
+using Xunit;
 
 namespace EnglishJourney.Application.Connection.Queries.GetAllConnectionTopics.Tests
 {
@@ -29,13 +26,20 @@ namespace EnglishJourney.Application.Connection.Queries.GetAllConnectionTopics.T
 
             var loggerMock = new Mock<ILogger<GetAllTopicsQueryHandler>>();
 
-            var handler = new GetAllTopicsQueryHandler(connectionRepositoryMock.Object, mapper, loggerMock.Object);
+            var userContextMock = new Mock<IUserContext>();
+            var currentUser = new CurrentUser("user-id", "test@test.com", []);
+            userContextMock.Setup(u => u.GetCurrentUser()).Returns(currentUser);
+
+            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeConnection(It.IsAny<ConnectionTopic>(), It.IsAny<ResourceOperation>())).Returns(true);
+
+            var handler = new GetAllTopicsQueryHandler(connectionRepositoryMock.Object, mapper, englishJourneyAuthorizationServiceMock.Object, loggerMock.Object, userContextMock.Object);
 
             // act
             await handler.Handle(query, CancellationToken.None);
 
             // assert
-            connectionRepositoryMock.Verify(c => c.GetAllTopics(), Times.Once());
+            connectionRepositoryMock.Verify(c => c.GetAllTopics(currentUser.Id), Times.Once());
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EnglishJourney.Application.Mappings;
+using EnglishJourney.Domain.Constants;
 using EnglishJourney.Domain.Entities;
 using EnglishJourney.Domain.Exceptions;
 using EnglishJourney.Domain.Interfaces;
@@ -21,7 +22,10 @@ namespace EnglishJourney.Application.Connection.Commands.CreateConnectionAttribu
 
             var loggerMock = new Mock<ILogger<CreateAttributeCommandHandler>>();
 
-            return new CreateAttributeCommandHandler(connectionRepositoryMock.Object, mapper, loggerMock.Object);
+            var englishJourneyAuthorizationServiceMock = new Mock<IEnglishJourneyAuthorizationService>();
+            englishJourneyAuthorizationServiceMock.Setup(e => e.AuthorizeConnection(It.IsAny<ConnectionTopic>(), It.IsAny<ResourceOperation>())).Returns(true);
+
+            return new CreateAttributeCommandHandler(connectionRepositoryMock.Object, mapper, loggerMock.Object, englishJourneyAuthorizationServiceMock.Object);
         }
 
         [Fact]
