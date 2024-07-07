@@ -74,10 +74,9 @@ namespace EnglishJourney.API.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> DeleteFlashcard(int id, DeleteFlashcardCommand command)
+        public async Task<ActionResult> DeleteFlashcard(int id)
         {
-            command.Id = id;
-            await mediator.Send(command);
+            await mediator.Send(new DeleteFlashcardCommand { Id = id });
 
             return NoContent();
         }

@@ -1,18 +1,22 @@
-﻿using EnglishJourney.Application.Note.Commands.CreateNote;
+﻿using EnglishJourney.APITests;
+using EnglishJourney.Application.Note.Commands.CreateNote;
 using EnglishJourney.Application.Note.Commands.EditNote;
 using EnglishJourney.Domain.Interfaces;
 using FluentAssertions;
+using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 using Newtonsoft.Json;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text;
 using Xunit;
 
 namespace EnglishJourney.API.Controllers.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class NoteControllerTests : IClassFixture<WebApplicationFactory<Program>>
     {
         private readonly WebApplicationFactory<Program> factory;
@@ -24,6 +28,8 @@ namespace EnglishJourney.API.Controllers.Tests
             {
                 builder.ConfigureTestServices(services =>
                 {
+                    services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>();
+
                     services.Replace(ServiceDescriptor.Scoped(typeof(INoteRepository),
                                                 _ => noteRepositoryMock.Object));
                 });
@@ -61,7 +67,7 @@ namespace EnglishJourney.API.Controllers.Tests
         {
             // arrange
             var client = factory.CreateClient();
-            var note = new Domain.Entities.Note { Id = 1, Title = "Test" };
+            var note = new Domain.Entities.Note { Id = 1, Title = "Test", UserId = "1" };
             noteRepositoryMock.Setup(m => m.GetById(note.Id)).ReturnsAsync(note);
 
             // act
@@ -89,7 +95,7 @@ namespace EnglishJourney.API.Controllers.Tests
         {
             // arrange
             var client = factory.CreateClient();
-            var note = new Domain.Entities.Note { Id = 1, Title = "Test" };
+            var note = new Domain.Entities.Note { Id = 1, Title = "Test", UserId = "1" };
             noteRepositoryMock.Setup(m => m.GetById(note.Id)).ReturnsAsync(note);
 
             // act
@@ -117,7 +123,7 @@ namespace EnglishJourney.API.Controllers.Tests
         {
             // arrange
             var client = factory.CreateClient();
-            var note = new Domain.Entities.Note { Id = 1, Title = "Test" };
+            var note = new Domain.Entities.Note { Id = 1, Title = "Test", UserId = "1" };
             noteRepositoryMock.Setup(m => m.GetById(note.Id)).ReturnsAsync(note);
 
             var command = new EditNoteCommand { Title = "Test" };
@@ -151,7 +157,7 @@ namespace EnglishJourney.API.Controllers.Tests
         {
             // arrange
             var client = factory.CreateClient();
-            var note = new Domain.Entities.Note { Id = 1, Title = "Test" };
+            var note = new Domain.Entities.Note { Id = 1, Title = "Test", UserId = "1" };
             noteRepositoryMock.Setup(m => m.GetById(note.Id)).ReturnsAsync(note);
 
             // act

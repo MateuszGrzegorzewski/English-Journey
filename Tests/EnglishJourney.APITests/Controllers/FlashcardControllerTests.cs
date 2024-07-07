@@ -1,26 +1,25 @@
-﻿using EnglishJourney.Application.Flashcard;
+﻿using EnglishJourney.APITests;
+using EnglishJourney.Application.Flashcard;
 using EnglishJourney.Application.Flashcard.Commands.CreateCategory;
 using EnglishJourney.Application.Flashcard.Commands.CreateFlashcard;
-using EnglishJourney.Application.Flashcard.Commands.DeleteCategory;
-using EnglishJourney.Application.Flashcard.Commands.DeleteFlashcard;
 using EnglishJourney.Application.Flashcard.Commands.EditCategory;
-using EnglishJourney.Application.Flashcard.Queries.GetAllCategories;
-using EnglishJourney.Application.Flashcard.Queries.GetCategoryById;
 using EnglishJourney.Domain.Entities;
 using EnglishJourney.Domain.Interfaces;
 using FluentAssertions;
-using MediatR;
+using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 using Newtonsoft.Json;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text;
 using Xunit;
 
 namespace EnglishJourney.API.Controllers.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class FlashcardControllerTests : IClassFixture<WebApplicationFactory<Program>>
     {
         private readonly WebApplicationFactory<Program> factory;
@@ -32,6 +31,8 @@ namespace EnglishJourney.API.Controllers.Tests
             {
                 builder.ConfigureTestServices(services =>
                 {
+                    services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>();
+
                     services.Replace(ServiceDescriptor.Scoped(typeof(IFlashcardRepository),
                                                 _ => flashcardRepositoryMock.Object));
                 });
@@ -56,7 +57,7 @@ namespace EnglishJourney.API.Controllers.Tests
         {
             // arrange
             var id = 1;
-            var flashcardCategory = new FlashcardCategory { Id = id, Name = "Test" };
+            var flashcardCategory = new FlashcardCategory { Id = id, Name = "Test", UserId = "1" };
             flashcardRepositoryMock.Setup(m => m.GetFlashardCategoryById(id))
                 .ReturnsAsync(flashcardCategory);
             var client = factory.CreateClient();
@@ -88,7 +89,7 @@ namespace EnglishJourney.API.Controllers.Tests
         public async void UpdateCategory_ForValidRequest_Returns204NoContent()
         {
             // arrange
-            var category = new FlashcardCategory { Name = "Test" };
+            var category = new FlashcardCategory { Name = "Test", UserId = "1" };
             flashcardRepositoryMock.Setup(m => m.GetFlashardCategoryById(1))
                 .ReturnsAsync(category);
             var client = factory.CreateClient();
@@ -123,7 +124,7 @@ namespace EnglishJourney.API.Controllers.Tests
         public async void DeleteCategory_ForValidRequest_Returns204NoContent()
         {
             // arrange
-            var category = new FlashcardCategory { Name = "Test" };
+            var category = new FlashcardCategory { Name = "Test", UserId = "1" };
             flashcardRepositoryMock.Setup(m => m.GetFlashardCategoryById(1))
                 .ReturnsAsync(category);
             var client = factory.CreateClient();
@@ -185,7 +186,7 @@ namespace EnglishJourney.API.Controllers.Tests
         {
             // arrange
             var id = 1;
-            var flashcardBox = new FlashcardBox { Id = id, BoxNumber = 2 };
+            var flashcardBox = new FlashcardBox { Id = id, BoxNumber = 2, FlashcardCategory = new FlashcardCategory { Name = "Test", UserId = "1" } };
             flashcardRepositoryMock.Setup(m => m.GetFlashardBoxById(id))
                 .ReturnsAsync(flashcardBox);
             var client = factory.CreateClient();
@@ -214,10 +215,45 @@ namespace EnglishJourney.API.Controllers.Tests
         }
 
         [Fact]
+        public async void DeleteFlashcard_ForValidRequest_Returns204NoContent()
+        {
+            // arrange
+            var flashcard = new Flashcard
+            {
+                Phrase = "Test",
+                FlashcardBox = new FlashcardBox { Id = 1, FlashcardCategory = new FlashcardCategory { Name = "Test", UserId = "1" } }
+            };
+            var client = factory.CreateClient();
+            flashcardRepositoryMock.Setup(m => m.GetFlashardById(1))
+                .ReturnsAsync(flashcard);
+
+            // act
+            var result = await client.DeleteAsync("/api/flashcards/1");
+
+            // assert
+            result.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        }
+
+        [Fact]
+        public async void DeleteFlashcard_ForInvalidRequest_Returns404NotFound()
+        {
+            // arrange
+            var client = factory.CreateClient();
+
+            // act
+            var result = await client.DeleteAsync("/api/flashcards/1");
+
+            // assert
+            result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
         public async void CreateFlashcard_ForValidRequest_Returns201Created()
         {
             // arrange
             var client = factory.CreateClient();
+            flashcardRepositoryMock.Setup(f => f.GetFlashardBoxById(It.IsAny<int>()))
+                .ReturnsAsync(new FlashcardBox { Id = 1, FlashcardCategory = new FlashcardCategory { Name = "Test", UserId = "1" } });
             var command = new CreateFlashcardCommand { Phrase = "Test", Definition = "Test definition" };
             var jsonContent = new StringContent(JsonConvert.SerializeObject(command), Encoding.UTF8, "application/json");
 

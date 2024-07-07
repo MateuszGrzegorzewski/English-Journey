@@ -1,21 +1,25 @@
-﻿using EnglishJourney.Application.Connection;
+﻿using EnglishJourney.APITests;
+using EnglishJourney.Application.Connection;
 using EnglishJourney.Application.Connection.Commands.CreateConnectionAttribute;
 using EnglishJourney.Application.Connection.Commands.CreateConnectionTopic;
 using EnglishJourney.Application.Connection.Commands.EditConnectionTopic;
 using EnglishJourney.Domain.Entities;
 using EnglishJourney.Domain.Interfaces;
 using FluentAssertions;
+using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 using Newtonsoft.Json;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text;
 using Xunit;
 
 namespace EnglishJourney.API.Controllers.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class ConnectionControllerTests : IClassFixture<WebApplicationFactory<Program>>
     {
         private readonly WebApplicationFactory<Program> factory;
@@ -27,6 +31,8 @@ namespace EnglishJourney.API.Controllers.Tests
             {
                 builder.ConfigureTestServices(services =>
                 {
+                    services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>();
+
                     services.Replace(ServiceDescriptor.Scoped(typeof(IConnectionRepository),
                                                 _ => connectionRepositoryMock.Object));
                 });
@@ -51,7 +57,7 @@ namespace EnglishJourney.API.Controllers.Tests
         {
             // arrange
             var id = 1;
-            var connectionTopic = new ConnectionTopic { Id = id, Topic = "Test" };
+            var connectionTopic = new ConnectionTopic { Id = id, Topic = "Test", UserId = "1" };
             connectionRepositoryMock.Setup(c => c.GetTopicById(id)).ReturnsAsync(connectionTopic);
             var client = factory.CreateClient();
 
@@ -85,7 +91,7 @@ namespace EnglishJourney.API.Controllers.Tests
         public async void UpdateTopic_WithValidRequest_Returns204NoContent()
         {
             // arrange
-            var connectionTopic = new ConnectionTopic { Topic = "Test" };
+            var connectionTopic = new ConnectionTopic { Topic = "Test", UserId = "1" };
             connectionRepositoryMock.Setup(c => c.GetTopicById(1)).ReturnsAsync(connectionTopic);
             var client = factory.CreateClient();
 
@@ -119,7 +125,7 @@ namespace EnglishJourney.API.Controllers.Tests
         public async void DeleteTopic_WithValidRequest_Returns204NoContent()
         {
             // arrange
-            var connectionTopic = new ConnectionTopic { Topic = "Test" };
+            var connectionTopic = new ConnectionTopic { Topic = "Test", UserId = "1" };
             connectionRepositoryMock.Setup(c => c.GetTopicById(1)).ReturnsAsync(connectionTopic);
             var client = factory.CreateClient();
 
@@ -147,7 +153,7 @@ namespace EnglishJourney.API.Controllers.Tests
         public async Task DeleteAttribute_ForValidRequest_Returns204NoContent()
         {
             // arrange
-            var connectionAttribute = new ConnectionAttribute { Word = "Test" };
+            var connectionAttribute = new ConnectionAttribute { Word = "Test", Topic = new ConnectionTopic { Topic = "Test", UserId = "1" } };
             connectionRepositoryMock.Setup(c => c.GetAttributeById(1)).ReturnsAsync(connectionAttribute);
             var client = factory.CreateClient();
 
@@ -209,7 +215,7 @@ namespace EnglishJourney.API.Controllers.Tests
         public async void CreateAttribute_ForValidRequest_Returns201Created()
         {
             // arrange
-            var connectionTopic = new ConnectionTopic { Topic = "Test" };
+            var connectionTopic = new ConnectionTopic { Topic = "Test", UserId = "1" };
             connectionRepositoryMock.Setup(c => c.GetTopicById(1)).ReturnsAsync(connectionTopic);
             var client = factory.CreateClient();
 
