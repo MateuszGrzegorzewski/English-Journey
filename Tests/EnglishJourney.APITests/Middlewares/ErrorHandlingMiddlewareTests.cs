@@ -4,12 +4,14 @@ using FluentAssertions;
 using Moq;
 using Xunit;
 using EnglishJourney.Domain.Entities;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EnglishJourney.APITests.Middlewares
 {
+    [ExcludeFromCodeCoverage]
     public class ErrorHandlingMiddlewareTests
     {
-        [Fact()]
+        [Fact]
         public async Task InvokeAsync_WhenNoExceptionThrown_ShouldCallNextDelegate()
         {
             // arrange
@@ -39,6 +41,22 @@ namespace EnglishJourney.APITests.Middlewares
 
             // assert
             context.Response.StatusCode.Should().Be(404);
+        }
+
+        [Fact]
+        public async Task InvokeAsync_WhenForbidExceptionThrown_ShouldSetStatusCode403()
+        {
+            // arrange
+            var context = new DefaultHttpContext();
+            var loggerMock = new Mock<ILogger<ErrorHandlingMiddleware>>();
+            var middleware = new ErrorHandlingMiddleware(loggerMock.Object);
+            var forbidException = new ForbidException();
+
+            // act
+            await middleware.InvokeAsync(context, _ => throw forbidException);
+
+            // assert
+            context.Response.StatusCode.Should().Be(403);
         }
 
         [Fact]
