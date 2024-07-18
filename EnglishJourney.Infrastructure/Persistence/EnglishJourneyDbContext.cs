@@ -13,6 +13,7 @@ namespace EnglishJourney.Infrastructure.Persistence
         public DbSet<Flashcard> Flashcards { get; set; }
         public DbSet<FlashcardBox> FlashcardsBoxes { get; set; }
         public DbSet<FlashcardCategory> FlashcardsCategories { get; set; }
+        public DbSet<UserStatistic> UserStatistics { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
