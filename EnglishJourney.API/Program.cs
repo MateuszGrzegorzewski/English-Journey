@@ -5,6 +5,8 @@ using EnglishJourney.API.Middlewares;
 using Serilog;
 using EnglishJourney.Domain.Entities;
 using EnglishJourney.Infrastructure.Seeders;
+using Hangfire;
+using EnglishJourney.Infrastructure.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +42,14 @@ app.MapGroup("api/identity")
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseHangfireDashboard();
+
+RecurringJob.AddOrUpdate<IUserStatisticsService>(
+    "DailyUserRegistrationCount",
+    service => service.GetDUserStatisticAsync(),
+    Cron.Daily
+    );
 
 app.Run();
 

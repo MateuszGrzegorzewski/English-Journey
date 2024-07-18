@@ -2,9 +2,12 @@
 using EnglishJourney.Domain.Entities;
 using EnglishJourney.Domain.Interfaces;
 using EnglishJourney.Infrastructure.Authorization;
+using EnglishJourney.Infrastructure.BackgroundServices;
+using EnglishJourney.Infrastructure.Interfaces;
 using EnglishJourney.Infrastructure.Persistence;
 using EnglishJourney.Infrastructure.Repositories;
 using EnglishJourney.Infrastructure.Seeders;
+using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -29,8 +32,14 @@ namespace EnglishJourney.Infrastructure.Extensions
             services.AddScoped<INoteRepository, NoteRepository>();
             services.AddScoped<IConnectionRepository, ConnectionRepository>();
             services.AddScoped<IFlashcardRepository, FlashcardRepository>();
+            services.AddScoped<IUserStatisticRepository, UserStatisticRepository>();
 
             services.AddScoped<IEnglishJourneyAuthorizationService, EnglishJourneyAuthorizationService>();
+
+            services.AddScoped<IUserStatisticsService, UserStatisticsService>();
+
+            services.AddHangfire(config => config.UseSqlServerStorage(configuration.GetConnectionString("EnglishJourney")));
+            services.AddHangfireServer();
         }
     }
 }
