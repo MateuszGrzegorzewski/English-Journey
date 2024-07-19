@@ -2,6 +2,6 @@
 {
     public interface IUserStatisticsService
     {
-        Task GetDUserStatisticAsync();
+        Task GetUserStatisticAsync();
     }
 }

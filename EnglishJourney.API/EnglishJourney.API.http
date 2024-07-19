@@ -233,3 +233,11 @@ Content-Type: application/json
 }
 
 ###
+
+# USER STATISTICS
+
+###
+
+GET {{EnglishJourney.API_HostAddress}}/api/statistics/users
+
+###

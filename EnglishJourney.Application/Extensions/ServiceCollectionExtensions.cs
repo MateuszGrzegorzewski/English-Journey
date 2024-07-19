@@ -17,6 +17,7 @@ namespace EnglishJourney.Application.Extensions
             services.AddAutoMapper(typeof(NoteMappingProfile));
             services.AddAutoMapper(typeof(ConnectionMappingProfile));
             services.AddAutoMapper(typeof(FlashcardMappingProfile));
+            services.AddAutoMapper(typeof(StatisticMappingProfile));
 
             services.AddValidatorsFromAssemblyContaining<CreateNoteCommandValidator>()
                 .AddFluentValidationAutoValidation()

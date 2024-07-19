@@ -46,8 +46,8 @@ app.MapControllers();
 app.UseHangfireDashboard();
 
 RecurringJob.AddOrUpdate<IUserStatisticsService>(
-    "DailyUserRegistrationCount",
-    service => service.GetDUserStatisticAsync(),
+    "GetUserStatisticAsync",
+    service => service.GetUserStatisticAsync(),
     Cron.Daily
     );
 

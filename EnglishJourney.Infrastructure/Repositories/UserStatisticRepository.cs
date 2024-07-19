@@ -26,5 +26,8 @@ namespace EnglishJourney.Infrastructure.Repositories
 
         public async Task<int> NationalitiesSet()
             => await dbContext.Users.CountAsync(u => u.Nationality != null);
+
+        public async Task<IEnumerable<UserStatistic>> GetAllUserStatitistics()
+            => await dbContext.UserStatistics.OrderBy(u => u.Date).ToListAsync();
     }
 }

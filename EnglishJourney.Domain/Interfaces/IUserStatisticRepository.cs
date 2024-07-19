@@ -11,5 +11,7 @@ namespace EnglishJourney.Domain.Interfaces
         Task<int> NationalitiesSet();
 
         Task<int> RegisteredAccounts();
+
+        Task<IEnumerable<UserStatistic>> GetAllUserStatitistics();
     }
 }
