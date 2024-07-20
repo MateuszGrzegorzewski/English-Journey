@@ -1,6 +1,6 @@
 @host = https://localhost
 @port = 7222
-@token = CfDJ8Mc1gB6HmiNFseLzFaTpiMZ5ilQyunUgfJBmuLzyOgZPE26dWUUt1kNV-olQYLwZtCk4FNz09vQ9Pu8KKTTpMipBrejUS2gmoRFbP4C16n5eVZyOgw-CuE13V8hV03F7Y1Z09Z9jSiks_I6OtxS9eoJzSsyYQTzSt6zu9dKk_2Tk0p0wPg6-nL4do5F6czOeeF-B9zufxVlYTqoBbwwIp8yhZxhq7bbzDTqpjtA7oyyhLF_uDWbdUMeZ6IqP4pP_-aZEsm7xicZKN94xPqbjN-WBvK3WDRvx9arqBzXrTWOy90TtRwmpMk0oS2gWk5MK9FWiSKiSO6UEHzfPtNAXfuk-hD60IZBzO5nk2Orc62OAxuHw2Zb0wBSF177aPpWB8zcEDN56qV-pArIbYSz0M4KZ4EVSvoVLbF_wZfZwgoGPlnXegv4ZqgTCpva-l8pPRewSj7shbzk92N8Q1J1edyqexvWYSrGJaOGn66g3JoJ7KoH0vQSpp3qALoatzzJgleXAPDH_QzMkF_C16w6pi3Kmqy928JCiNEkpOBtZIEeYqV0TF9pTzpdmHZYGc4c0JMo0vFpYWRie2CrNEVpjM4T0gFUn1BUL7mxGOOvTF8x6QZa8h5jaM4_qFWt4nirw9KKKdoXeNxM7o2rLQwCFDZ1vxGrXiNCDIHm6lob9-lY-AxAAlG0IKfnyMLf1Ke3TFbCevBF3m1xPnjB5dRtXhL7JuliKtStk4-1Q1abSoZLnzAH5xLbkN85od7rLTN43hoFJnIa6Uk4ar2MqUiA3MFappE5mhvDyYnwQTSDbVw1H
+@token = CfDJ8Mc1gB6HmiNFseLzFaTpiMbYqVFT_HgCoPApnY5WOF5jWMjyqrAxom_pp54j04hJ1Dr4G4ClJemqu3kZVVAMcaptlBdt_p4nGOlxfaSWkXz2TcOGQCgPN1djw-AKjaoJkuPnNeBfFGqMo5FJGDRGbRtIbvE6mcBHh5F2xJ--YT3GoucSKyVu-RzBVInLO037eoKflkPGsSqdVsmUGrntDVnQadc9ualbd_IOHQ9EYCkka6CtiMQ1WuIuUtpZB64AelYbo6JLAbRBfBTwkuYgUzGxJ5zBEriv1QJyoQci3de9h001wnA0K_naTHZeTSQhw5-Jvj-fKAoBFriEnsqN6GLdW3H6Xijd1BDdnxomsTh5IbNLGQj8whWkk7O_traJ_j5nfQlL1I3moomWbDGuLeq3wywXTMJlnUfifxu7TtosjYj9-J6lwvevAeLtkIo5O2sCqNEgS2SBM5NcLf48ZiC9UPUFq3-7Bt_vuDFWSk2_yQOqp4ORzVH3Bnk0PYISGwRCvh1xo-3FZE411gjilZUH4_bCnhahvJu81kyfh5YAsffa2Fsgt3qoA410do3x_ClQhOogZJLPlysnh614C-S-gPHqhFEvCcS80CJ6fvIeDuxFRH5ITbPylreiZJKHKuHd8udwCG9C41xMpQT4NSY8Onn2WA1nfUWAuUP3NrDkUMpv-ov6uBBm6qTOYpWYz9udE-xxrQjjZZqaKXdPw4ZiAFZcFZvBlS84x0kvEhO3MQpIO55mfUC5BEJ7Wk4cp91H9EG4TsYuWicK_I56xvKnkh4kjEYOBH-eGP0KWdVD
 
 @EnglishJourney.API_HostAddress = https://localhost:7222
 
@@ -205,7 +205,7 @@ POST {{EnglishJourney.API_HostAddress}}/api/identity/login
 Content-Type: application/json
 
 {
-  "email": "user@test.com",
+  "email": "admin@test.com",
   "password" : "Password1!"
 }
 
@@ -239,9 +239,11 @@ Content-Type: application/json
 ###
 
 GET {{EnglishJourney.API_HostAddress}}/api/statistics/users
+Authorization: Bearer {{token}}
 
 ###
 
 GET {{EnglishJourney.API_HostAddress}}/api/statistics/demography
+Authorization: Bearer {{token}}
 
 ###

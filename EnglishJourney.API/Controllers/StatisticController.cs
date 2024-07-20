@@ -1,12 +1,15 @@
 ﻿using EnglishJourney.Application.Statistic;
 using EnglishJourney.Application.Statistic.Queries.GetDemography;
 using EnglishJourney.Application.Statistic.Queries.GetUserStatistics;
+using EnglishJourney.Domain.Constants;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EnglishJourney.API.Controllers
 {
     [ApiController]
+    [Authorize(Roles = UserRoles.Admin)]
     [Route("api/statistics")]
     public class StatisticController(IMediator mediator) : ControllerBase
     {
