@@ -3,7 +3,7 @@ using EnglishJourney.Domain.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace EnglishJourney.Application.Statistic.Queries
+namespace EnglishJourney.Application.Statistic.Queries.GetUserStatistics
 {
     internal class GetUserStatisticsQueryHandler(IUserStatisticRepository repository, IMapper mapper,
         ILogger<GetUserStatisticsQueryHandler> logger)

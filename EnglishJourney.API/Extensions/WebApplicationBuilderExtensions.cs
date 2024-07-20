@@ -10,7 +10,8 @@ namespace EnglishJourney.API.Extensions
         {
             builder.Services.AddAuthentication();
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddNewtonsoftJson(); ;
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddEndpointsApiExplorer();

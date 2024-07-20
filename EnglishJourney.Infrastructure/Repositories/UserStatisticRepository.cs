@@ -1,5 +1,6 @@
 ﻿using EnglishJourney.Domain.Entities;
 using EnglishJourney.Domain.Interfaces;
+using EnglishJourney.Domain.Statistic;
 using EnglishJourney.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,5 +30,11 @@ namespace EnglishJourney.Infrastructure.Repositories
 
         public async Task<IEnumerable<UserStatistic>> GetAllUserStatitistics()
             => await dbContext.UserStatistics.OrderBy(u => u.Date).ToListAsync();
+
+        public async Task<List<DemographyResult>> GetDemography()
+             => await dbContext.Users
+                .GroupBy(u => u.Nationality)
+                .Select(g => new DemographyResult { Nationality = g.Key, Count = g.Count() })
+                .ToListAsync();
     }
 }

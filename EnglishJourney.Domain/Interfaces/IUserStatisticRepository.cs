@@ -1,4 +1,5 @@
 ﻿using EnglishJourney.Domain.Entities;
+using EnglishJourney.Domain.Statistic;
 
 namespace EnglishJourney.Domain.Interfaces
 {
@@ -13,5 +14,7 @@ namespace EnglishJourney.Domain.Interfaces
         Task<int> RegisteredAccounts();
 
         Task<IEnumerable<UserStatistic>> GetAllUserStatitistics();
+
+        Task<List<DemographyResult>> GetDemography();
     }
 }
