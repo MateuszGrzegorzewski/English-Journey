@@ -40,6 +40,7 @@ Another functionality added to the app is statistics. They allow daily tracking 
 - MediatR
 - ASP Identity
 - Hangfire
+- Serilog
 - xUnit, Fluent Assertions and Moq to tests
 
 ## Further Development
