@@ -1,6 +1,6 @@
 # English Journey
 
-English Journey is an API developed with ASP.NET technology, which objective is to support English language learning through various functions based on memory techniques. The application allows users to create flashcards, connections and short notes, which helps to effectively acquire and consolidate knowledge. In addition, users can analyze their learning progress to better track the development of their language skills.
+English Journey is an API developed with ASP.NET technology, which objective is to support English language learning through various functions based on memory techniques. The application allows users to create flashcards, connections and short notes, which helps to effectively acquire and consolidate knowledge. In addition, users can analyze their learning progress to better track the development of their language skills. Statistics have also been added to the app to track changes in users and analyze demographics.
 
 ## Table of Contents
 
@@ -28,6 +28,10 @@ Another feature for learning vocabulary words, expressions or idioms is "Connect
 
 Another very useful technique for learning a foreign language is creating short notes. These can include information about grammar, popular phrases, or other important aspects of the language. The user has the option of archiving notes that he or she deems mastered, or deleting them altogether. Storing archived notes allows you to return to them at any time, which can be very helpful in tracking your learning progress and consolidating the knowledge you have gained.
 
+### Statistics
+
+Another functionality added to the app is statistics. They allow daily tracking of changes in the number of registered users, the number of admins and users with nationality set. In addition, statistics have been added that analyze the demographics of users
+
 ## Technologies
 
 - ASP.NET Core
@@ -35,13 +39,13 @@ Another very useful technique for learning a foreign language is creating short 
 - FluentValidation
 - MediatR
 - ASP Identity
+- Hangfire
 - xUnit, Fluent Assertions and Moq to tests
 
 ## Further Development
 
-1. In the next step, a frontend will be created for the application using the Angular framework.
-2. Once the frontend is created, more techniques will be added to the application to facilitate learning the foreign language.
-3. The next objective is to create and track statistics related to the use of the application, including which functionalities are most popular, which countries the users come from, and so on.
+1. Frontend will be created for the application using the Angular framework.
+2. More techniques will be added to the application to facilitate learning the foreign language.
 
 ## Installation
 
