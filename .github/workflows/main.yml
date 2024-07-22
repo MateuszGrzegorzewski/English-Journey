@@ -3,7 +3,7 @@ name: englishJourney-api-ci
 on:
   pull_request:
     branches:
-    - main
+      - main
 
 jobs:
   build:
@@ -18,12 +18,10 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Restore dependencies
-        run: dotnet restore\
+        run: dotnet restore
 
-      - name:  Build
+      - name: Build
         run: dotnet build --no-restore
-      
+
       - name: Test
-        run: dotnet test 
-      
-      
+        run: dotnet test
